@@ -57,18 +57,27 @@
 	
 	$.api={
 		addClass:function(c){return this.each(function(){$.addClass(this,c);});},
-		append:function(a){},
-		appendTo:function(a){},
+		append:function(a){
+			
+		},
+		appendTo:function(a){
+			
+		},
 		each:function(f){if(this.length){var i=-1,l=this.length;while(++i<l){if(false===f.call(this[i],i)){break;}}}return this;},
 		hasClass:function(c){return this.length?$.hasClass(this[0],c):false;},
-		prepend:function(a){},
-		prependTo:function(a){},
+		prepend:function(a){
+			
+		},
+		prependTo:function(a){
+			
+		},
 		push:(function(){
 			var _p=function(e){if($.isElement(e)){this[this.length]=e;this.length++;}};
 			return function(a){$.each(!$.isArrayLike(a)?[a]:a,_p,this);return this;};
 		})(),
 		remove:function(){},
-		removeClass:function(c){return this.each(function(){$.removeClass(this,c);});}
+		removeClass:function(c){return this.each(function(){$.removeClass(this,c);});},
+		toggleClass:function(c){return this.each(function(){$.toggleClass(this,c);});}
 	};
 	
 	W.$=$;
