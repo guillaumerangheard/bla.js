@@ -24,6 +24,7 @@
 	$.each=function(a,f,c){if($.isArrayLike(a)){c=c||this;var i=-1,l=a.length;while(++i<l){if(false===f.call(c,a[i],i,a)){break;}}}};
 	$.eachKey=function(o,f,c){c=c||this;var i=-1,k=$.keys(o),l=k.length;while(++i<l){f.call(c,k[i],o[k[i]]);}};
 	$.extend=function(a,b,p){var r;if(p){r={};$.eachKey(a,function(k,v){r[k]=v;});}else{r=a;}$.eachKey(b,function(k,v){r[k]=v;});return r;};
+	$.identity=function(a){return a;};
 	$.is$=function(a){return a instanceof $;}
 	$.isArray=function(a){return "[object Array]"===_tS(a);};
 	$.isArrayLike=function(a){return $.isNumber(a.length);};
@@ -49,34 +50,137 @@
 	{
 		addClass:function(e,c){if($.isElement(e)){var d=e.className;$.each(c.split(" "),function(v){if(d.indexOf(v)<0){d+=" "+v;}});e.className=d;}},
 		hasClass:function(e,c){if($.isElement(e)){var d=e.className;return $.all(c.split(" "),function(v){return -1<d.indexOf(v);});}return false;},
-		removeClass:function(e,c){if($.isElement(e)){e.className=$.map(e.className.split(" "),function(v){return -1<c.indexOf(v)?"":v;}).join(" ");}},
+		removeClass:function(e,c){if($.isElement(e)){
+			e.className=$.map(e.className.split(" "),function(v){return -1<c.indexOf(v)?"":v;}).join(" ");}},
 		toggleClass:function(e,c){
 			
 		}
 	});
 	
 	$.api={
-		addClass:function(c){return this.each(function(){$.addClass(this,c);});},
-		append:function(a){
+		
+		// $.prototype.addClass ( String classes )
+		addClass:function(c){
+			if($.document.classList){
+				return this.each(function(){
+					this.classList.add(c);
+				});
+			}
+			c=c.split(" ");
+			return this.each(function(){
+				var d=this.className;
+				$.each(c,function(v){
+					if(d.indexOf(v)<0){
+						d+=" "+v;
+					}
+				});
+				this.className=d;
+			});
+		},
+		
+		after:function(a){
 			
 		},
+		
+		append:function(a){
+			if(this.length){
+				if($.isElement(a)){
+					this.each(function(i){
+						this.appendChild(0<i?$.clone(a):a);
+					});
+				}
+				else if($.isString(a)){
+					this.each(function(){
+						this.insertAdjacentHTML("beforeend",a);
+					});
+				}
+				else if($.isArray(a)){
+					this.each(function(){
+						this.appendChild($.build.apply(W,a));
+					});
+				}
+			}
+			return this;
+		},
+		
 		appendTo:function(a){
 			
 		},
-		each:function(f){if(this.length){var i=-1,l=this.length;while(++i<l){if(false===f.call(this[i],i)){break;}}}return this;},
-		hasClass:function(c){return this.length?$.hasClass(this[0],c):false;},
+		
+		before:function(a){},
+		
+		childNodes:function(){},
+		
+		children:function(){},
+		
+		click:function(h){},
+		
+		css:function(a,b){},
+		
+		// $.prototype.each ( Function iterator [ , Boolean wrapped = false ] )
+		each:function(f,w){
+			if(this.length){
+				var i=-1,l=this.length,p=w?$:$.identity;
+				while(++i<l){
+					if(false===f.call(p(this[i]),i)){
+						break;
+					}
+				}
+			}
+			return this;
+		},
+		
+		// $.prototype.hasClass ( String classes )
+		hasClass:function(c){
+			if(this.length){
+				if(this[0].classList){
+					return this[0].classList.contains(c);
+				}
+				var d=this[0].className;
+				return $.all(c.split(" "),function(v){
+					return -1<d.indexOf(v);
+				});
+			}
+			return false;
+		},
+		
 		prepend:function(a){
 			
 		},
+		
 		prependTo:function(a){
 			
 		},
+		
+		// $.prototype.push ( Any value )
 		push:(function(){
-			var _p=function(e){if($.isElement(e)){this[this.length]=e;this.length++;}};
-			return function(a){$.each(!$.isArrayLike(a)?[a]:a,_p,this);return this;};
+			var _p=function(e){
+					if($.isElement(e)){
+						this[this.length]=e;
+						this.length++;
+					}
+				};
+			return function(a){
+				$.each(!$.isArrayLike(a)?[a]:a,_p,this);
+				return this;
+			};
 		})(),
+		
 		remove:function(){},
-		removeClass:function(c){return this.each(function(){$.removeClass(this,c);});},
+		
+		// $.prototype.removeClass ( String classes )
+		removeClass:function(c){
+			return this.each($.document.classList?
+				function(){
+					this.classList.remove(c);
+				}:
+				function(){
+					this.className=$.map(this.className.split(" "),function(v){
+						return -1<c.indexOf(v)?"":v;
+					}).join(" ");
+				});
+		},
+		
 		toggleClass:function(c){return this.each(function(){$.toggleClass(this,c);});}
 	};
 	
