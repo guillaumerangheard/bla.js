@@ -1,13 +1,32 @@
 (function(D,O,W){
 	var _api=true,
-		_ctx=function(a){a=$.isString(a)?D.querySelector(a):a;a=$.isArrayLike(a)?a[0]:a;return $.isElement(a)?a:D;},
-		_tS=function(a){return O.prototype.toString.call(a);},
+		_ctx=function(a){
+			a=$.isString(a)?D.querySelector(a):a;
+			a=$.isArrayLike(a)?a[0]:a;
+			return $.isElement(a)?a:D;
+		},
+		_tA=function(a){
+			return $.isArrayLike(a)?a:[a];
+		},
+		_tS=function(a){
+			return O.prototype.toString.call(a);
+		},
 		
 		$=function(a,b){
-			if(!$.is$(this)){return new $(a,b);}
-			if(_api){$.extend($.prototype,$.api);_api=false;}
+			if(!$.is$(this)){
+				return new $(a,b);
+			}
+			if(_api){
+				$.extend($.prototype,$.api);
+				_api=false;
+			}
 			this.length=0;
-			this.push($.isString(a)?_ctx(b).querySelectorAll(a):$.isArray(a)?$.build.apply(W,a):a);
+			this.push($.isString(a)?
+				_ctx(b).querySelectorAll(a):
+				($.isArray(a)?
+				 $.build.apply(W,a):
+				 a)
+			);
 		};
 	
 	// $.all ( ArrayLike collection , Function test [ , Any context = this ] )
@@ -29,9 +48,18 @@
 	// $.build ( String tag [ , Object attributes = {} [ , String content ] ] )
 	$.build(a,b,c){
 		var n=$.make(a);
-		if($.isObject(b)){$.bakeSetter(b)(n);}
+		if($.isObject(b)){
+			$.bakeSetter(b)(n);
+		}
 		if($.isDefined(c)){
-			
+			$.each(_tA(c),function(v){
+				if($.isString(v)){
+					n.insertAdjacentHTML("beforend",v);
+				}
+				else if($.isArray(v)){
+					n.appendChild($.build.apply(W,v));
+				}
+			});
 		}
 		return n;
 	};
@@ -47,7 +75,7 @@
 		}
 	};
 	
-	// $.document is a shorthand for document.documentElement
+	// $.document is a shorthand for document.documentElement, no more, no less.
 	$.document=D.documentElement;
 	
 	// $.each ( ArrayLike collection , Function iterator [ , Any context = this ] )
@@ -90,6 +118,19 @@
 			return r;
 		};
 	})();
+	
+	// $.get ( Element element , String key )
+	/// In the next iteration, add support for "paths".
+	$.get=function(e,k){
+		return $.get[k]?$.get[k](e):e[k];
+	};
+	
+	// $.getter ( String alias , Function getter )
+	// $.getter ( String alias , String key )
+	$.getter=function(a,b){
+		$.get[a]=$.isString(b)?new Function("e","return e."+b+";"):b;
+		return $;
+	};
 	
 	// $.identity ( Any value )
 	$.identity=function(a){
@@ -182,6 +223,12 @@
 		}
 		return r;
 	};
+	
+	// $.set ( Any element , String key , Any value )
+	$.set=function(e,k,v){};
+	
+	// $.setter
+	$.setter=function(a,b){};
 	
 	$.api={
 		
