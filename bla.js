@@ -10,7 +10,23 @@
 			this.push($.isString(a)?_ctx(b).querySelectorAll(a):$.isArray(a)?$.build.apply(W,a):a);
 		};
 	
-	$.all=function(a,f,c){if($.isArrayLike(a)){c=c||this;var i=-1,l=a.length;while(++i<l){if(!f.call(c,a[i],i,a)){return false;}}return true;}return false;};
+	// $.all ( ArrayLike collection , Function test [ , Any context = this ] )
+	$.all=function(a,f,c){
+		if($.isArrayLike(a)){
+			c=c||this;
+			var i=-1,l=a.length;
+			while(++i<l){
+				if(!f.call(c,a[i],i,a)){
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	};
+	
+	// $.build ( String tag [ , Object attributes = {} [ , Array children ] ] )
+	// $.build ( String tag [ , Object attributes = {} [ , String content ] ] )
 	$.build(a,b,c){
 		var n=$.make(a);
 		if($.isObject(b)){$.bakeSetter(b)(n);}
@@ -19,43 +35,153 @@
 		}
 		return n;
 	};
-	$.clone=function(a){if($.isElement(a)){var r=a.cloneNode&&a.cloneNode(true);if(r&&0<r.id.length){r.id="";}return r;}};
-	$.document=D.documentElement;
-	$.each=function(a,f,c){if($.isArrayLike(a)){c=c||this;var i=-1,l=a.length;while(++i<l){if(false===f.call(c,a[i],i,a)){break;}}}};
-	$.eachKey=function(o,f,c){c=c||this;var i=-1,k=$.keys(o),l=k.length;while(++i<l){f.call(c,k[i],o[k[i]]);}};
-	$.extend=function(a,b,p){var r;if(p){r={};$.eachKey(a,function(k,v){r[k]=v;});}else{r=a;}$.eachKey(b,function(k,v){r[k]=v;});return r;};
-	$.identity=function(a){return a;};
-	$.is$=function(a){return a instanceof $;}
-	$.isArray=function(a){return "[object Array]"===_tS(a);};
-	$.isArrayLike=function(a){return $.isNumber(a.length);};
-	$.isDefined=function(a){return !$.isUndefined(a);};
-	$.isElement=function(a){return a&&1===a.nodeType;};
-	$.isNaN=function(a){return a!==a;};
-	$.isNumber=function(a){return !$.isNaN(a)&&"[object Number]"===_tS(a);};
-	$.isObject=function(a){return O(a)===a;};
-	$.isString=function(a){return "[object String]"===_tS(a);};
-	$.isUndefined=function(a){return a===void 0;};
-	$.keys=O.keys||function(o){var r=[];for(var k in o){if(o.hasOwnProperty(k)){r.push(k);}}return r;};
-	$.make=function(a){return $.make[a]?$.make[a]():D.createElement(a);};
-	$.maker=function(a,b){$.make[a]=$.isString(b)?new Function("return document.createElement(\""+b+"\");"):b;};
-	$.map=function(a,f,c){c=c||this;var i=-1,l=a.length,r=[];while(++i<l){r.push(f.call(c,a[i],i,a));}return r;};
 	
-	$.extend($,$.document.classList?
-	{
-		addClass:function(e,c){$.isElement(e)&&e.classList.add(c);},
-		hasClass:function(e,c){$.isElement(e)&&e.classList.contains(c);},
-		removeClass:function(e,c){$.isElement(e)&&e.classList.remove(c);},
-		toggleClass:function(e,c){$.isElement(e)&&e.classList.toggle(c);}
-	}:
-	{
-		addClass:function(e,c){if($.isElement(e)){var d=e.className;$.each(c.split(" "),function(v){if(d.indexOf(v)<0){d+=" "+v;}});e.className=d;}},
-		hasClass:function(e,c){if($.isElement(e)){var d=e.className;return $.all(c.split(" "),function(v){return -1<d.indexOf(v);});}return false;},
-		removeClass:function(e,c){if($.isElement(e)){
-			e.className=$.map(e.className.split(" "),function(v){return -1<c.indexOf(v)?"":v;}).join(" ");}},
-		toggleClass:function(e,c){
-			
+	// $.clone ( Element element )
+	$.clone=function(a){
+		if($.isElement(a)){
+			var r=a.cloneNode&&a.cloneNode(true);
+			if(r&&0<r.id.length){
+				r.id="";
+			}
+			return r;
 		}
-	});
+	};
+	
+	// $.document is a shorthand for document.documentElement
+	$.document=D.documentElement;
+	
+	// $.each ( ArrayLike collection , Function iterator [ , Any context = this ] )
+	$.each=function(a,f,c){
+		if($.isArrayLike(a)){
+			c=c||this;
+			var i=-1,l=a.length;
+			while(++i<l){
+				if(false===f.call(c,a[i],i,a)){
+					break;
+				}
+			}
+		}
+	};
+	
+	// $.eachKey ( Object object , Function iterator [ , Any context = this ] )
+	$.eachKey=function(o,f,c){
+		c=c||this;
+		var i=-1,k=$.keys(o),l=k.length;
+		while(++i<l){
+			f.call(c,k[i],o[k[i]]);
+		}
+	};
+	
+	// $.extend ( Any extendee , Object extender [ Boolean preserve = false ] )
+	$.extend=(function(){
+		var _e=function(k,v){
+				this[k]=v;
+			};
+		return function(a,b,p){
+			var r;
+			if(p){
+				r={};
+				$.eachKey(a,_e,r);
+			}
+			else{
+				r=a;
+			}
+			$.eachKey(b,_e,r);
+			return r;
+		};
+	})();
+	
+	// $.identity ( Any value )
+	$.identity=function(a){
+		return a;
+	};
+	
+	// $.is$ ( Any value )
+	$.is$=function(a){
+		return a instanceof $;
+	}
+	
+	// $.isArray ( Any value )
+	$.isArray=function(a){
+		return "[object Array]"===_tS(a);
+	};
+	
+	// $.isArrayLike ( Any value )
+	$.isArrayLike=function(a){
+		return $.isNumber(a.length);
+	};
+	
+	// $.isDefined ( Any value )
+	$.isDefined=function(a){
+		return !$.isUndefined(a);
+	};
+	
+	// $.isElement ( Any value )
+	$.isElement=function(a){
+		return a&&1===a.nodeType;
+	};
+	
+	// $.isNaN ( Any value )
+	$.isNaN=function(a){
+		return a!==a;
+	};
+	
+	// $.isNumber ( Any value )
+	$.isNumber=function(a){
+		return !$.isNaN(a)&&"[object Number]"===_tS(a);
+	};
+	
+	// $.isObject ( Any value )
+	$.isObject=function(a){
+		return O(a)===a;
+	};
+	
+	// $.isString ( Any value )
+	$.isString=function(a){
+		return "[object String]"===_tS(a);
+	};
+	
+	// $.isUndefined ( Any value )
+	$.isUndefined=function(a){
+		return a===void 0;
+	};
+	
+	// $.keys ( Object object )
+	$.keys=O.keys||function(o){
+		var r=[];
+		for(var k in o){
+			if(o.hasOwnProperty(k)){
+				r.push(k);
+			}
+		}
+		return r;
+	};
+	
+	// $.make ( String tag )
+	/// Would it be relevant to implement a 'wrapped' version ?
+	$.make=function(a){
+		return $.make[a]?$.make[a]():D.createElement(a);
+	};
+	
+	// $.maker ( String alias , Function maker )
+	// $.maker ( String alias , String tag )
+	$.maker=function(a,b){
+		$.make[a]=$.isString(b)?new Function("return document.createElement(\""+b+"\");"):b;
+		return $;
+	};
+	
+	// $.map ( ArrayLike collection , Function mapper [ , Any context = this ] )
+	$.map=function(a,f,c){
+		var r=[];
+		if($.isArrayLike(a)){
+			c=c||this;
+			var i=-1,l=a.length;
+			while(++i<l){
+				r.push(f.call(c,a[i],i,a));
+			}
+		}
+		return r;
+	};
 	
 	$.api={
 		
@@ -82,6 +208,11 @@
 			
 		},
 		
+		// $.prototype.append ( Array builder )
+		// $.prototype.append ( Bla elements )
+		// $.prototype.append ( Collection elements )
+		// $.prototype.append ( Element element )
+		// $.prototype.append ( String content )
 		append:function(a){
 			if(this.length){
 				if($.isElement(a)){
@@ -103,6 +234,9 @@
 			return this;
 		},
 		
+		// $.prototype.appendTo ( Bla elements )
+		// $.prototype.appendTo ( Collection elements )
+		// $.prototype.appendTo ( Element element )
 		appendTo:function(a){
 			
 		},
