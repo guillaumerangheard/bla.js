@@ -49,7 +49,9 @@
 	$.build(a,b,c){
 		var n=$.make(a);
 		if($.isObject(b)){
-			$.bakeSetter(b)(n);
+			$.eachKey(b,function(k,v){
+				$.set(n,k,v);
+			});
 		}
 		if($.isDefined(c)){
 			$.each(_tA(c),function(v){
@@ -62,6 +64,13 @@
 			});
 		}
 		return n;
+	};
+	
+	// $.builder ( Array builder )
+	$.builder=function(a){
+		return function(){
+			return $.build.apply(W,a);
+		};
 	};
 	
 	// $.clone ( Element element )
@@ -225,10 +234,20 @@
 	};
 	
 	// $.set ( Any element , String key , Any value )
-	$.set=function(e,k,v){};
+	$.set=function(e,k,v){
+		if($.set[k]){
+			$.set[k](e,v);
+		}
+		else{
+			e[k]=v;
+		}
+	};
 	
 	// $.setter
-	$.setter=function(a,b){};
+	$.setter=function(a,b){
+		$.set[a]=$.isString(b)?new Function("e","v","e."+b+"=v;"):b;
+		return $;
+	};
 	
 	$.api={
 		
@@ -251,9 +270,11 @@
 			});
 		},
 		
-		after:function(a){
-			
-		},
+		after:(function(){
+			var _a=function(){
+					
+				};
+		})(),
 		
 		// $.prototype.append ( Array builder )
 		// $.prototype.append ( Bla elements )
@@ -288,6 +309,7 @@
 			
 		},
 		
+		// $.prototype.before
 		before:function(a){},
 		
 		childNodes:function(){},
