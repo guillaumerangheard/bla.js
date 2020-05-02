@@ -44,6 +44,31 @@
 		return false;
 	};
 	
+	// $.bakeTest ( Function test )
+	// $.bakeTest ( String test )
+	$.bakeTest=function(a){
+		if($.isFunction(a)){
+			return a;
+		}
+		else if($.isString(a)){
+			var r="return ";
+			switch(a.charAt(0)){
+				case"#":
+					r+="\""+a.substr(1)+"\"===e.id;";
+					break;
+				case".":
+					r+=$.document.classList?:
+					"e.classList.contains(\""+a.substr(1)+"\");":
+					"$.all([\""+a.substr(1).replace(/ /g,"\",\"")+"\"],function(v){return 0<this.indexOf(v);},e.className);";
+					break;
+				default:
+					r="true;"
+			}
+			return new Function("e",r);
+		}
+		return function(){return true;};
+	};
+	
 	// $.build ( String tag [ , Object attributes = {} [ , Array children ] ] )
 	// $.build ( String tag [ , Object attributes = {} [ , String content ] ] )
 	$.build(a,b,c){
@@ -270,11 +295,43 @@
 			});
 		},
 		
-		after:(function(){
-			var _a=function(){
-					
-				};
-		})(),
+		// $.prototype.after ( )
+		// $.prototype.after ( Array builder )
+		// $.prototype.after ( Bla elements )
+		// $.prototype.after ( Collection elements )
+		// $.prototype.after ( String content )
+		after:function(a){
+			if(this.length){
+				if($.isDefined(a)){
+					if($.isString(a)){
+						this.each(function(){
+							this.insertAdjacentHTML("afterend",a);
+						});
+					}
+					else if($.isElement(a)){
+						this.each(function(i){
+							var n=0<i?$.clone(a):a,
+								p=this.parentNode,
+								s=this.nextSibling;
+							p&&(s?p.insertBefore(n,s):p.appendChild(n));
+						});
+					}
+					else if($.isArray(a)){
+						this.each(function(){
+							var n=$.build.apply(W,a),
+								p=this.parentNode,
+								s=this.nextSibling;
+							p&&(s?p.insertBefore(n,s):p.appendChild(n));
+						});
+					}
+					/*
+					Add support for Bla and collections.
+					*/
+					return this;
+				}
+				return $(this[0].nextSibling);
+			}
+		},
 		
 		// $.prototype.append ( Array builder )
 		// $.prototype.append ( Bla elements )
@@ -310,7 +367,34 @@
 		},
 		
 		// $.prototype.before
-		before:function(a){},
+		before:function(a){
+			if(this.length){
+				if($.isDefined(a)){
+					if($.isString(a)){
+						this.each(function(){
+							this.insertAdjacentHTML("beforebegin",a);
+						});
+					}
+					else if($.isElement(a)){
+						this.each(function(i){
+							var p=this.parentNode;
+							p&&p.insertBefore(0<i?$.clone(a):a,this);
+						});
+					}
+					else if($.isArray(a)){
+						this.each(function(){
+							var p=this.parentNode;
+							p&&p.insertBefore($.build.apply(W,a),this);
+						});
+					}
+					/*
+					/// Add support for instances of Bla and collections
+					*/
+					return this;
+				}
+				return this[0].previousSibling;
+			}
+		},
 		
 		childNodes:function(){},
 		
@@ -347,8 +431,35 @@
 			return false;
 		},
 		
+		// $.prototype.prepend ( Array builder )
+		/// $.prototype.prepend ( Bla elements )
+		/// $.prototype.prepend ( Collection elements )
+		// $.prototype.prepend ( Element element )
+		// $.prototype.prepend ( String content )
 		prepend:function(a){
-			
+			return this.each(
+				$.isString(a)?
+				function(){
+					this.insertAdjacentHTML("afterbegin",a);
+				}:
+				($.isElement(a)?
+					function(i){
+						var c=this.firstChild,
+							n=i?$.clone(a):a;
+						c&&this.insertBefore(n,c)||this.appendChild(n);
+					}:
+					($.isArray(a)?
+						function(){
+							var c=this.firstChild,
+								n=$.build.apply(W,a);
+							c&&this.insertBefore(n,c)||this.appendChild(n);
+						}:
+						function(){
+							
+						}
+					)
+				)
+			);
 		},
 		
 		prependTo:function(a){
