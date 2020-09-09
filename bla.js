@@ -33,7 +33,8 @@
 	$.all=function(a,f,c){
 		if($.isArrayLike(a)){
 			c=c||this;
-			var i=-1,l=a.length;
+			var i=-1,
+				l=a.length;
 			while(++i<l){
 				if(!f.call(c,a[i],i,a)){
 					return false;
@@ -116,7 +117,8 @@
 	$.each=function(a,f,c){
 		if($.isArrayLike(a)){
 			c=c||this;
-			var i=-1,l=a.length;
+			var i=-1,
+				l=a.length;
 			while(++i<l){
 				if(false===f.call(c,a[i],i,a)){
 					break;
@@ -128,7 +130,9 @@
 	// $.eachKey ( Object object , Function iterator [ , Any context = this ] )
 	$.eachKey=function(o,f,c){
 		c=c||this;
-		var i=-1,k=$.keys(o),l=k.length;
+		var i=-1,
+			k=$.keys(o),
+			l=k.length;
 		while(++i<l){
 			f.call(c,k[i],o[k[i]]);
 		}
@@ -241,7 +245,9 @@
 	// $.maker ( String alias , Function maker )
 	// $.maker ( String alias , String tag )
 	$.maker=function(a,b){
-		$.make[a]=$.isString(b)?new Function("return document.createElement(\""+b+"\");"):b;
+		$.make[a]=$.isString(b)?
+				  new Function("return document.createElement(\""+b+"\");"):
+				  b;
 		return $;
 	};
 	
@@ -250,7 +256,8 @@
 		var r=[];
 		if($.isArrayLike(a)){
 			c=c||this;
-			var i=-1,l=a.length;
+			var i=-1,
+				l=a.length;
 			while(++i<l){
 				r.push(f.call(c,a[i],i,a));
 			}
@@ -270,7 +277,9 @@
 	
 	// $.setter
 	$.setter=function(a,b){
-		$.set[a]=$.isString(b)?new Function("e","v","e."+b+"=v;"):b;
+		$.set[a]=$.isString(b)?
+				 new Function("e","v","e."+b+"=v;"):
+				 b;
 		return $;
 	};
 	
@@ -407,7 +416,11 @@
 		// $.prototype.each ( Function iterator [ , Boolean wrapped = false ] )
 		each:function(f,w){
 			if(this.length){
-				var i=-1,l=this.length,p=w?$:$.identity;
+				var i=-1,
+					l=this.length,
+					p=w?
+					  $:
+					  $.identity;
 				while(++i<l){
 					if(false===f.call(p(this[i]),i)){
 						break;
@@ -495,7 +508,11 @@
 				});
 		},
 		
-		toggleClass:function(c){return this.each(function(){$.toggleClass(this,c);});}
+		toggleClass:function(c){
+			return this.each(function(){
+				$.toggleClass(this,c);
+			});
+		}
 	};
 	
 	W.$=$;
