@@ -66,11 +66,17 @@ $ ( Collection | Element | String [ , Element | String ] )
 
 ### .plug ( String alias , Function plugin )
 
+### .publish ( String _event_ [ Object _data_ = {} ] )
+
 .ready ( Function _callback_ [ , Array _arguments_ = [] [ , Any _context_ = root ] ] )
 
 .set ( Element _element_, String _alias_, Variable _value_ )
 
 .setter ( String _alias_ , Function | String _setter_ )
+
+### .subscribe ( String _event_ , Function handler [ , Any _context_ = root ] )
+
+### .unsubscribe ( String _event_ )
 
 ## Instance methods
 
@@ -94,13 +100,23 @@ $ ( Collection | Element | String [ , Element | String ] )
 
 ### .data
 
-### .each
+### .delegate ( String _event_ [ , Function test ] , Function handler )
+
+### .each ( Function _iterator_ [ , Boolean _wrapped_ = false ] )
 
 ### .filter
+
+### .fire ( String _event_ )
+
+### .first ( [ Numner _count_ = 1 ] )
 
 ### .hover ( Function _inHandler_ , Function _outHandler_ )
 
 ### .html ( [ String _html_ ] )
+
+### .off ( String _event_ [ , Function _handler_ ] )
+
+### .on ( String _event_ , Function _handler_ )
 
 ### .prepend
 
