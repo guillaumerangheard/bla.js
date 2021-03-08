@@ -3,47 +3,91 @@
 **bla.js** is a small, modular front-end javascript library for common tasks.
 Its works on IE9+ and modern browsers, as it uses [Q](https://github.com/guillaumerangheard/Qjs) as its selector engine.
 
-## $ ( Collection | Element | String [ , Element | String ] )
+## Constructor
+$ ( Collection | Element | String [ , Element | String ] )
 
-## $.addClass ( String classes )
+## Static methods
 
-## $.all ( Collection collection , Function test [ , Any context = this ] )
+.bakeGetter
 
-## $.build ( String tag [ , Object attributes [ , Variable children ] ] )
+.bakeSetter
 
-## $.each ( Collection collection , Function iterator [ , Any context = this ] )
+### .build ( String _alias_ [ , Object _attributes_ = {} [ , Variable _children_ ] ] )
 
-## $.eachKey ( Object object , Function iterator [ , Any context = this ] )
+### .css.getter ( String _alias_ , Function | String _getter_ )
 
-## $.clone ( Element element )
+### .css.setter ( String _alias_ , Function | String _getter_ )
 
-## $.hasClass ( String classes )
+### .document
 
-## $.is$ ( Any value )
-Returns `true` if `value` is an instance of $.
+### .get ( Element element , String alias )
 
-## $.isArray ( Any value )
-Return `true` if `value` is an array.
+### .getter ( String _alias_ , Function | String _getter_ )
 
-## $.isArraylike ( Any value )
-Returns `true` if `value` is an array-like object (that is if it has a `length` property that is a `Number`).
+### .head
 
-## $.make ( String tag )
+### .isArray ( Any _value_ )
 
-## $.maker ( String alias , String tag | Function maker )
+### .isArrayLike ( Any _value_ )
 
-## $.map ( Collection collection , Function mapper [ , Any context = this ] )
+### .isBoolean ( Any _value_ )
 
-## $.removeClass ( String classes )
+### .isDate ( Any _value_ )
 
-## $.toggleClass ( String classes )
+### .isDefined ( Any _value_ )
 
-## $.prototype.addClass ( String classes )
+### .isElement ( Any _value_ )
 
-## $.prototype.hasClass ( String classes )
+### .isFalsey ( Any _value_ )
 
-## $.prototype.push ( Variable value )
+### .isNaN ( Any _value_ )
 
-## $.prototype.removeClass ( String classes )
+### .isNode ( Any _value_ )
 
-## $.prototype.toggleClass ( String classes )
+### .isNull ( Any _value_ )
+
+### .isNumber ( Any _value_ )
+
+### .isObject ( Any _value_ )
+
+### .isRegExp ( Any _value_ )
+
+### .isString ( Any _value_ )
+
+### .isTruthy ( Any _value_ )
+
+### .isUndefined ( Any _value_ )
+
+.make ( String _alias_ )
+
+.maker ( String _alias_ , Function | String _maker_ )
+
+.ready ( Function _callback_ [ , Array _arguments_ = [] [ , Any _context_ = root ] ] )
+
+.set ( Element _element_, String _alias_, Variable _value_ )
+
+.setter ( String _alias_ , Function | String _setter_ )
+
+## Instance methods
+
+### .addClass ( String _classes_ )
+
+### .after
+
+### .append
+
+### .appendTo
+
+### .before
+
+### .css ( String _property_ , Variable _value_ )
+
+### .prepend
+
+### .prependTo
+
+### .remove ( )
+
+### .removeClass ( String _classes_ )
+
+### .toggleClass ( String _classes_ )
