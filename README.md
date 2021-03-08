@@ -8,6 +8,8 @@ $ ( Collection | Element | String [ , Element | String ] )
 
 ## Static methods
 
+### .api
+
 .bakeGetter
 
 .bakeSetter
@@ -62,6 +64,8 @@ $ ( Collection | Element | String [ , Element | String ] )
 
 .maker ( String _alias_ , Function | String _maker_ )
 
+### .plug ( String alias , Function plugin )
+
 .ready ( Function _callback_ [ , Array _arguments_ = [] [ , Any _context_ = root ] ] )
 
 .set ( Element _element_, String _alias_, Variable _value_ )
@@ -78,9 +82,25 @@ $ ( Collection | Element | String [ , Element | String ] )
 
 ### .appendTo
 
+### .attr
+
 ### .before
 
+### .children
+
+### .click ( [ Function _handler_ ] )
+
 ### .css ( String _property_ , Variable _value_ )
+
+### .data
+
+### .each
+
+### .filter
+
+### .hover ( Function _inHandler_ , Function _outHandler_ )
+
+### .html ( [ String _html_ ] )
 
 ### .prepend
 
