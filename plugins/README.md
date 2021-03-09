@@ -27,10 +27,16 @@ $.plug("myAwesomePlugin",function(){
 This static plugin was inspired by a [tutorial](https://davidwalsh.name/pubsub-javascript) by [David Walsh](https://davidwalsh.name/). As its name (somewhat) implies, it implements the [publish-subscribe pattern](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern), and consists of three functions.
 
 ### $.publish ( String _event_ [ , Object _data_ = {} ] )
+This function allows you to publish an app- (or page-)wide event. You can also specify data to be passed to every handler listening to said event.
+```javascript
+$.publish("news",{title:"bla.js is awesome!"});
+```
 
 ### $.subscribe ( String _event_ , Function _handler_ [ , Object _defaultData_ = {} [ , Any context = _root_ ] ] )
+This function allows you attach a handler to an event. You can also specify default data to be passed to the handler, and a context in which it be called. It returns a numeric identifier for the handler.
 
-### $.unsubscribe ( String _event_ [ , Number _id_ ] )
+### $.unsubscribe ( String _event_ [ , Array | Number _ids_ ] )
+By calling `unsubscribe` with only an event's name, one can cancel all handlers attached to it. By specifying an id (or array of id's), one can only cancel the selected handlers.
 
 ## $.Template [alpha]
 This static plugin will add client-side templating to **bla.js**, and is very much a work in progress. It was inspired by [EJS](https://ejs.co/) and [Krasimir Tsonev](https://krasimirtsonev.com/)'s [Javascript template engine in just 20 lines](https://krasimirtsonev.com/blog/article/Javascript-template-engine-in-just-20-line). It exposes a `$.Template` factory function (i.e. no need to use `new`).
