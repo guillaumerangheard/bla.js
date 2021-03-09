@@ -13,6 +13,9 @@ This _instance_ plugin was inspired by [verge](https://github.com/ryanve/verge),
 ### $.prototype.isInViewport ( )
 This function returns `true` if the first element is in the viewport, and `false` otherwise.
 
+## templates (alpha)
+This _static_ plugin adds templating to **bla.js**, and is very much a work in progress. It was inspired by [EJS](https://ejs.co/) and [Krasimir Tsonev](https://krasimirtsonev.com/)'s [Javascript template engine in just 20 lines](https://krasimirtsonev.com/blog/article/Javascript-template-engine-in-just-20-line).
+
 ## viewport (v0.1.0)
 This _static_ plugin was inspired by [verge](https://github.com/ryanve/verge), by [Ryan Van Etten]. It has no dependencies, and consists of three functions:
 
