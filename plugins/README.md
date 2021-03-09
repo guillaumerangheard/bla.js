@@ -1,6 +1,12 @@
 # bla.js plugins
 I created a bunch of little plugins while I was writing [bla.js](https://github.com/guillaumerangheard/blajs).
 
+## $.aspectRatio ( ) [v0.1.0]
+This static plugin was inspired by [verge](https://github.com/ryanve/verge), by [Ryan Van Etten](https://github.com/ryanve). It returns the viewport's aspect ratio in the form of a number, and requires **$.viewport** 0.1+ to work. Not to be confused with **$.api.aspectRatio**, which returns a given _element_'s aspect ratio.
+
+## $.api.aspectRatio ( ) [alpha]
+This instance plugin was inspired by [verge](https://github.com/ryanve/verge), by [Ryan Van Etten](https://github.com/ryanve). It returns the first element's aspect ratio in the form of a number, and requires **$.api.bRect** 0.1+ to work. Not to be confused with **$.aspectRatio**, which returns the _viewport_'s aspect ratio.
+
 ## $.api.bRect ( ) [v0.1.0]
 This one-line, zero-dependency instance plugin is basically a wrapper around [`element.getBoundingClientRect`](https://developer.mozilla.org/fr/docs/Web/API/Element/getBoundingClientRect). It returns an object describing the first element's position and dimensions with four properties: `left`, `top`, `width`, and `height`.
 
