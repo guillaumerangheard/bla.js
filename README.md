@@ -6,9 +6,28 @@ Its works on IE9+ and modern browsers, as it uses (a version of) <a target="_bla
 ## Constructor
 $ ( Collection | Element | String [ , Element | String ] )
 
-## Static methods
+## How to write plugins
 
-### .api
+## Static plugin
+A static plugin is one that adds functionalities to `$`, but not to its instances. To do so, one has to modify `$.api`, like so:
+```javascript
+// Adding a static plugin:
+$.myPlugin = function(){
+    // Do things.
+};
+
+// Adding an instance plugin:
+$.api.myOtherPlugin = function(){
+    // Do things.
+    // Don't forget to add "return this" at the end of your code,
+    // so as to make it chainable, much like you would when writing
+    // a jQuery plugin:
+    return this;
+};
+```
+Please note that your plugin must be created _before_ you first call `$()`.
+
+ ## Static methods
 
 .bakeGetter
 
