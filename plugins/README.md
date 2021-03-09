@@ -23,6 +23,15 @@ $.plug("myAwesomePlugin",function(){
 });
 ```
 
+## $.pubsub [alpha]
+This static plugin was inspired by a [tutorial](https://davidwalsh.name/pubsub-javascript) by [David Walsh](https://davidwalsh.name/). As its name (somewhat) implies, it implements the [publish-subscribe pattern](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern), and consists of three functions.
+
+### $.publish ( String _event_ [ , Object _data_ = {} ] )
+
+### $.subscribe ( String _event_ , Function _handler_ [ , Object _defaultData_ = {} [ , Any context = _root_ ] ] )
+
+### $.unsubscribe ( String _event_ [ , Number _id_ ] )
+
 ## $.Template [alpha]
 This static plugin will add client-side templating to **bla.js**, and is very much a work in progress. It was inspired by [EJS](https://ejs.co/) and [Krasimir Tsonev](https://krasimirtsonev.com/)'s [Javascript template engine in just 20 lines](https://krasimirtsonev.com/blog/article/Javascript-template-engine-in-just-20-line). It exposes a `$.Template` factory function (i.e. no need to use `new`).
 
