@@ -6,17 +6,21 @@ Its works on IE9+ and modern browsers, as it uses (a version of) <a target="_bla
 ## Constructor
 $ ( Collection | Element | String [ , Element | String ] )
 
-## How to write plugins
+## Writing plugins
 
-## Static plugin
-A static plugin is one that adds functionalities to `$`, but not to its instances. To do so, one has to modify `$.api`, like so:
+## Static plugins
+A static plugin is one that adds functionalities to `$`, but not to its instances. To do so, just add a method to `$`, like so:
 ```javascript
 // Adding a static plugin:
 $.myPlugin = function(){
     // Do things.
 };
+```
+You can create a static plugin at any point of your page.
 
-// Adding an instance plugin:
+### Instance plugins
+An instance plugin is, as the name implies, one that adds functionalities to all instances of `$`, that is to `$.prototype`. To create one, one only needs to attach her code to the `$.api` object, like so:
+```javascript
 $.api.myOtherPlugin = function(){
     // Do things.
     // Don't forget to add "return this" at the end of your code,
@@ -25,15 +29,29 @@ $.api.myOtherPlugin = function(){
     return this;
 };
 ```
-Please note that your plugin must be created _before_ you first call `$()`.
+Please note that instance plugins must be declare _before_ your first call to `$()`.
 
  ## Static methods
 
-.bakeGetter
-
-.bakeSetter
-
 ### .build ( String _alias_ [ , Object _attributes_ = {} [ , Variable _children_ ] ] )
+`$.build` allows you to create HTML elements on the fly. The first argument has to be an "alias", that is either the name of a HTML tag (such as `a` for links, `p` for paragraphs, etc.) or a user-defined name (see **$.maker** below). The second argument is an object containing all your elements' attributes (whose names must be camel-cased). You can create aliases for attributes (see **$.getter** and **$.setter** below). The third argument is an array containing all your element's children, would you want to populate it.
+To create a simple link, with no explicit attributes and no children, just type:
+```javascript
+var link = $.build("a");
+```
+To create a link that actually points somewhere, type:
+```javascript
+var link = $.build("a",{href:"https://example.com"});
+```
+`$.build` returns your element wrapped inside a `$` instance, so you can do things like this:
+```javascript
+var link = $.build("a",{href:"https://example.com"}).appendTo(someOtherElement);
+// You can then do whatever you want with your newly created element,
+// such as setting its attributes or changing its appearance via CSS:
+link
+    .attr("target","_blank")
+    .css("color","red");
+```
 
 ### .css.getter ( String _alias_ , Function | String _getter_ )
 
