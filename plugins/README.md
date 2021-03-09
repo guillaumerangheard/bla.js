@@ -14,10 +14,37 @@ This one-line, zero-dependency instance plugin is basically a wrapper around [`e
 This instance plugin was inspired by [verge](https://github.com/ryanve/verge), by [Ryan Van Etten](https://github.com/ryanve). It requires **bRect** 0.1+ and **viewport** 0.1+ to work, and consists of only one function, which returns `true` if the first element is in the viewport, and `false` otherwise.
 
 ## $.plug ( String _alias_ , Function _code_ ) [alpha]
-This static plugin allows one to basically add plugins to **bla.js** at any time. It is very much a work in progress.
+This static plugin is very much a work in progress. It basically allows one to add plugins to **bla.js** at any time:
+```javascript
+$.plug("myAwesomePlugin",function(){
+	// My awesome code
+	// ...
+	return this;
+});
+```
 
 ## $.Template [alpha]
-This static plugin will add client-side templating to **bla.js**, and is very much a work in progress. It was inspired by [EJS](https://ejs.co/) and [Krasimir Tsonev](https://krasimirtsonev.com/)'s [Javascript template engine in just 20 lines](https://krasimirtsonev.com/blog/article/Javascript-template-engine-in-just-20-line).
+This static plugin will add client-side templating to **bla.js**, and is very much a work in progress. It was inspired by [EJS](https://ejs.co/) and [Krasimir Tsonev](https://krasimirtsonev.com/)'s [Javascript template engine in just 20 lines](https://krasimirtsonev.com/blog/article/Javascript-template-engine-in-just-20-line). It exposes a `$.Template` factory function (i.e. no need to use `new`).
+
+### $.template ( String _source_ )
+This functions creates an instance of `$.Template`, attributing it a given `source` (i.e. some string to turn into a template), and compiling said `source` into a function (see **$.Template.prototype.render** below).
+```javascript
+var t = $.Template("Hello, <?this.place?>.");
+```
+The same result can be achieved by doing so:
+```javascript
+var t = $.Template();
+t.source="Hello, <?this.place?>.";
+t.compile();
+```
+
+### $.Template.prototype.compile ( )
+Compiles the `$.Template`'s current source, returing `true` if the compiling process succeeded, and `false` otherwise. If so, you can call `$.Template.prototype.log` to check what went wrong.
+
+### $.Template.prototype.log ( )
+
+### $.Template.prototype.source
+Sets the source for the `$.Template`. When changing the latter's source, one needs to recompile it using `$.Template.prototype.compile`.
 
 ## $.viewport [v0.1.0]
 This static plugin was inspired by [verge](https://github.com/ryanve/verge), by [Ryan Van Etten](https://github.com/ryanve). It has no dependencies, and consists of three functions:
