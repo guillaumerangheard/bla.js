@@ -26,7 +26,7 @@ $.plug("myAwesomePlugin",function(){
 ## $.Template [alpha]
 This static plugin will add client-side templating to **bla.js**, and is very much a work in progress. It was inspired by [EJS](https://ejs.co/) and [Krasimir Tsonev](https://krasimirtsonev.com/)'s [Javascript template engine in just 20 lines](https://krasimirtsonev.com/blog/article/Javascript-template-engine-in-just-20-line). It exposes a `$.Template` factory function (i.e. no need to use `new`).
 
-### $.template ( String _source_ )
+### $.Template ( String _source_ )
 This functions creates an instance of `$.Template`, attributing it a given `source` (i.e. some string to turn into a template), and compiling said `source` into a function (see **$.Template.prototype.render** below).
 ```javascript
 var t = $.Template("Hello, <?this.place?>.");
@@ -42,6 +42,22 @@ t.compile();
 Compiles the `$.Template`'s current source, returing `true` if the compiling process succeeded, and `false` otherwise. If so, you can call `$.Template.prototype.log` to check what went wrong.
 
 ### $.Template.prototype.log ( )
+
+### $.Template.prototype.render ( Object _data_ )
+This function does the actual rendering of your template. It returns a string which you can then inject into the DOM.
+```javascript
+var template = $.Template("Hello, <?this.place?>. My name is <?this.name.first?> <?this.name.last?>."),
+	data = {
+		place: "World",
+		name: {
+			first: "Guillaume",
+			middle: "M.",
+			last: "Rangheard"
+		}
+	};
+$(someElement).html(template.render(data));
+// -> "Hello, World. My name is Guillaume Rangheard."
+```
 
 ### $.Template.prototype.source
 Sets the source for the `$.Template`. When changing the latter's source, one needs to recompile it using `$.Template.prototype.compile`.
