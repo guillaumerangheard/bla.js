@@ -58,20 +58,25 @@ link
 ### .css.setter ( String _alias_ , Function | String _getter_ )
 
 ### .document
+`$.document` is a shortcut to `document.documentElement`.
 
 ### .get ( Element element , String alias )
 
 ### .getter ( String _alias_ , Function | String _getter_ )
 
 ### .head
+`$.head` is a shortcut to your document's `<head>`.
 
 ### .isArray ( Any _value_ )
+This function returns `true` if `value` is an `Array`, and `false` otherwise.
 
 ### .isArrayLike ( Any _value_ )
 
 ### .isBoolean ( Any _value_ )
+This function returns `true` if `value` is a `Boolean`, and `false` otherwise.
 
 ### .isDate ( Any _value_ )
+This function returns `true` if `value` is a `Date`, and `false` otherwise.
 
 ### .isDefined ( Any _value_ )
 
