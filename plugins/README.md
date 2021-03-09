@@ -1,7 +1,7 @@
 # bla.js plugins
 I created a bunch of little plugins while I was writing [bla.js](https://github.com/guillaumerangheard/blajs).
 
-## $.prototype.bRect ( ) [v0.1.0]
+## <span style="color:#ddd;">$.prototype.</span>bRect ( ) [v0.1.0]
 This one-line, zero-dependency instance plugin is basically a wrapper around [`element.getBoundingClientRect`](https://developer.mozilla.org/fr/docs/Web/API/Element/getBoundingClientRect). It returns an object describing the first element's position and dimensions with four properties: `left`, `top`, `width`, and `height`.
 
 ## $.prototype.isInViewport ( ) [v0.1.0]
