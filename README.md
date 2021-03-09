@@ -7,16 +7,20 @@ Its works on IE9+ and modern browsers, as it uses (a version of) <a target="_bla
 $ ( Collection | Element | String [ , Element | String ] )
 
 ## Writing plugins
+**bla.js** is very easy to write plugins for, so one can make it do just what she wants to do. There are two types of plugins one can write: **static plugins** and **instance plugins**.
 
 ## Static plugins
-A static plugin is one that adds functionalities to `$`, but not to its instances. To do so, just add a method to `$`, like so:
+A static plugin is one that adds functionalities to `$`, but not to its instances. To create one, just add a method to `$`, like so:
 ```javascript
 // Adding a static plugin:
 $.myPlugin = function(){
     // Do things.
 };
 ```
-You can create a static plugin at any point of your page.
+You can declare a static plugin at any point in your code. To use it, just call it:
+```javascript
+$.myPlugin(someData);
+```
 
 ### Instance plugins
 An instance plugin is, as the name implies, one that adds functionalities to all instances of `$`, that is to `$.prototype`. To create one, one only needs to attach her code to the `$.api` object, like so:
@@ -29,7 +33,13 @@ $.api.myOtherPlugin = function(){
     return this;
 };
 ```
-Please note that instance plugins must be declare _before_ your first call to `$()`.
+Please note that instance plugins must be declare _before_ your first call to `$()`. Instance plugins can only be called from an instance of `$`:
+```javascript
+$.myOtherPlugin(someData);
+// This would lead to an error.
+$("#someId").myOtherPlugin(someData);
+// This would work.
+```
 
  ## Static methods
 
