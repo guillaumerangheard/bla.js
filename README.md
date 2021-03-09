@@ -1,7 +1,7 @@
 # bla.js
 
-**bla.js** is a small, modular front-end javascript library for common tasks.
-Its works on IE9+ and modern browsers, as it uses [Q](https://github.com/guillaumerangheard/Qjs) as its selector engine.
+**bla.js** is a compact front-end javascript library for common tasks, with jQuery-like API.
+Its works on IE9+ and modern browsers, as it uses (a version of) <a target="_blank" href="https://github.com/guillaumerangheard/Qjs">Q</a> as its selector engine.
 
 ## Constructor
 $ ( Collection | Element | String [ , Element | String ] )
