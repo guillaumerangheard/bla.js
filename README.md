@@ -95,62 +95,82 @@ This function returns `true` if `value` is a `Date`, and `false` otherwise.
 ### .isFalsey ( Any _value_ )
 
 ### .isNaN ( Any _value_ )
+This function returns `true` if `value` equals `NaN`, and `false` otherwise.
 
 ### .isNode ( Any _value_ )
 
 ### .isNull ( Any _value_ )
 
 ### .isNumber ( Any _value_ )
+This function returns `true` if `value` is a `Number`, and `false` otherwise.
 
 ### .isObject ( Any _value_ )
 
 ### .isRegExp ( Any _value_ )
+This function returns `true` if `value` is a `RegExp`, and `false` otherwise.
 
 ### .isString ( Any _value_ )
+This function returns `true` if `value` is a `String`, and `false` otherwise.
 
 ### .isTruthy ( Any _value_ )
 
 ### .isUndefined ( Any _value_ )
 
-.make ( String _alias_ )
+### .make ( String _alias_ )
+This function creates HTML elements.
 
-.maker ( String _alias_ , Function | String _maker_ )
+### .maker ( String _alias_ , Function | String _maker_ )
+This function helps you define custom functions for creating HTML elements.
 
-### .plug ( String alias , Function plugin )
+### .ready ( Function _callback_ [ , Array _arguments_ = [] [ , Any _context_ = root ] ] )
+This function allows you to call a function when the DOM is ready. It's very simliar to jQuery's `$(document).ready(...)`, except it allows you to pass arguments and a context to your handler.
 
-### .publish ( String _event_ [ Object _data_ = {} ] )
+### .set ( Element _element_, String _alias_, Variable _value_ )
 
-.ready ( Function _callback_ [ , Array _arguments_ = [] [ , Any _context_ = root ] ] )
-
-.set ( Element _element_, String _alias_, Variable _value_ )
-
-.setter ( String _alias_ , Function | String _setter_ )
-
-### .subscribe ( String _event_ , Function handler [ , Any _context_ = root ] )
-
-### .unsubscribe ( String _event_ )
+### .setter ( String _alias_ , Function | String _setter_ )
 
 ## Instance methods
 
 ### .addClass ( String _classes_ )
+This one is self-explanatory: it allows you to add a classe (or a space-separated list of classes) to a collection of elements.
+```javascript
+var links = $("a");
+links.addClass("red blinking");
+```
 
-### .after
+### .after ( [ Collection | Element | Maker | String _stuff_ ] )
 
-### .append
+### .append ( )
 
-### .appendTo
+### .appendTo ( )
 
-### .attr
+### .attr ( String attribute [ , Any _value_ ] )
 
-### .before
+### .before ( )
 
-### .children
+### .children ( [ Boolean _childNodes_ = false ] )
+This method returns a new **bla** object containing all children of all elements in a collection. If `childNodes` is set to `true`, the returned collection will contain all child _nodes_ (i.e. text nodes, etc.).
+```javascript
+var listItems = $("ul").children();
+```
+If you want to get only the children (or child nodes) of the first element in the collection, use `.first` like so:
+```javascript
+var firstListItems = $("ul").first().children();
+```
 
 ### .click ( [ Function _handler_ ] )
 
 ### .css ( String _property_ , Variable _value_ )
 
 ### .data
+This functions allows you to get and set `data-` attributes. There are three ways you can use it.
+
+#### .data ( String _key_ [ , Any _value_ ] )
+When you pass only a `key`, the function will return the value of the corresponding `data-` key attribute. If you pass a `value`, it will _set_ the corrresponding attribute.
+
+#### .data ( Array _keys_ )
+
+#### .data ( Object _data_ )
 
 ### .delegate ( String _event_ [ , Function test ] , Function handler )
 
@@ -161,6 +181,7 @@ This function returns `true` if `value` is a `Date`, and `false` otherwise.
 ### .fire ( String _event_ )
 
 ### .first ( [ Numner _count_ = 1 ] )
+This method returns the first (or the first `count`) element(s) if the collection.
 
 ### .hover ( Function _inHandler_ , Function _outHandler_ )
 
@@ -170,9 +191,9 @@ This function returns `true` if `value` is a `Date`, and `false` otherwise.
 
 ### .on ( String _event_ , Function _handler_ )
 
-### .prepend
+### .prepend ( )
 
-### .prependTo
+### .prependTo ( )
 
 ### .remove ( )
 
