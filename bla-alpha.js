@@ -72,8 +72,37 @@
 		}
 	};
 	
-	// [x.x.x] Function $.bakeTest ( Object match )
-	// [x.x.x] Function $.bakeTest ( String path )
+	// [0.1.0] Function $.bakeTest ( Function test )
+	// [0.1.0] Function $.bakeTest ( String test )
+	// [x.x.x] Function $.bakeTest ( Object test )
+	//// Requires: isFunction , isString , map
+	$.bakeTest=function(a){
+		if($.isFunction(a)){
+			return a;
+		}
+		if($.isString(a)){
+			switch(a.charAt(0)){
+				case"#":
+					return new Function("e","return \""+a.substr(1)+"\"===e.id;");
+				case".":
+					if($.document.classList){
+						return new Function("e","return $.isElement(e)?e.classList.contains(\""+a.substr(1)+"\"):false;");
+					}
+					else{
+						return new Function("e",a.indexOf(" ")<0?
+												"return $.isElement(e)?-1<e.className.indexOf(\""+a.substr(1)+"\");":
+												"if($.isElement(e)){var c=e.className;return $.all([\""+
+												a.substr(1).split(" ").join("\",\"")+
+												"\"],function(v){return -1<c.indexOf(v);});}");
+					}
+				case"<":
+					return new Function("e","return \""+a.substring(1,a.length-2).toUpperCase()+"\"===a.tagName;");
+				default:
+					return new Function("e","return $.get(e,\""+a+"\");");
+			}
+		}
+		return function(){return true;};
+	};
 	
 	// [0.1.0] Boolean $.build ( String alias [ , Object attributes = {} [ , Variable child1 , ... , Variable childN ] ] )
 	//// Requires: each.key , isArray , isObject , isString , make , set
@@ -93,7 +122,7 @@
 					n.insertAdjacentHTML("beforeend",A[i]);
 				}
 				else if($.isArray(A[i])){
-					n.appendChild($.build.apply(W,A[i]);
+					n.appendChild($.build.apply(W,A[i]));
 				}
 			}
 		}
@@ -101,6 +130,10 @@
 	};
 	
 	// [x.x.x] Function $.builder ( Array builder )
+	
+	// [x.x.x] Void $.delegate ( String event [ , Function test ] , Function handler )
+	// [x.x.x] Void $.delegate ( String event [ , Object test] , Function handler )
+	// [x.x.x] Void $.delegate ( String event [ , String test ] , Function handler )
 	
 	// [0.1.0] $.document
 	$.document=D.documentElement;
@@ -170,7 +203,12 @@
 		return $.get[a];
 	};
 	
-	// [x.x.x] Variable $.identity ( Any value )
+	// [x.x.x} $.head
+	
+	// [0.1.0] Variable $.identity ( Any value )
+	$.identity=function(a){
+		return a;
+	};
 	
 	// [0.1.0] Boolean $.is$ ( Any value )
 	$.is$=function(a){
@@ -188,6 +226,8 @@
 		return $.isNumber(a.length);
 	};
 	
+	// [x.x.x] Boolean $.isDate ( Any value )
+	
 	// [x.x.x] Boolean $.isDefined ( Any value )
 	
 	// [0.1.0] Boolean $.isElement ( Any value )
@@ -195,10 +235,17 @@
 		return a&&1===a.nodeType;
 	};
 	
-	// [0.1.0] $.isNaN ( Any value )
+	// [0.1.0] Boolean $.isFunction ( Any value )
+	$.isFunction=function(a){
+		return "[object Function]"===_tS(a)||"function"===typeof a;
+	};
+	
+	// [0.1.0] Boolean $.isNaN ( Any value )
 	$.isNaN=function(a){
 		return a!==a;
 	};
+	
+	// [x.x.x] Boolean $.isNode ( Any value )
 	
 	// [0.1.0] Boolean $.isNumber ( Any value )
 	//// Requires: isNaN
@@ -211,12 +258,14 @@
 		return O(a)===a;
 	};
 	
+	// [x.x.x] Boolean $.isRegExp ( Any value )
+	
 	// [0.1.0] Boolean $.isString ( Any value )
 	$.isString=function(a){
 		return "[object String]"===_tS(a);
 	};
 	
-	// [x.x.x] $.isUndefined ( Any value )
+	// [x.x.x] Boolean $.isUndefined ( Any value )
 	
 	// [x.x.x] Array $.map ( Collection collection , Function mapper [ Any context = window ] )
 	//// mapper ( Variable value , Number index , Collection collection )
@@ -224,7 +273,9 @@
 	
 	// [0.1.0] Element $.make ( String alias )
 	$.make=function(a){
-		return $.make[a]?$.make[a]():D.createElement(a);
+		return $.make[a]?
+						 $.make[a]():
+						 D.createElement(a);
 	};
 	
 	// [0.1.0] Function $.maker ( String alias , Function maker )
@@ -232,9 +283,30 @@
 	/// Requires: isString , make
 	$.maker=function(a,b){
 		$.make[a]=$.isString(b)?
-			new Function("return document.createElement(\""+b+"\");"):
-			b;
+								new Function("return document.createElement(\""+b+"\");"):
+								b;
 		return $.make[a];
+	};
+	
+	// [0.1.0] Void $.noop ( )
+	$.noop=function(){};
+	
+	// [0.1.0] Void $.ready ( Function handler [ , Array arguments = [] [ , Any context = window ] ] )
+	$.ready=function(h,a,c){
+		if($.isFunction(h)){
+			a=a||[];
+			c=c||W;
+			if(D.addEventListener){
+				D.addEventListener("DOMContentLoaded",function(){
+					return h.apply(c,a);
+				});
+			}
+			else{
+				D.attachEvent("onreadystatechange",function(){
+					return h.apply(c,a);
+				});
+			}
+		}
 	};
 	
 	// [0.1.0] Void $.set ( Any value , String key , Any value )
@@ -260,6 +332,23 @@
 	$.api={
 		
 		// [x.x.x] $ $.prototype.addClass ( String classes )
+		addClass:function(a){
+			if($.document.classList){
+				return this.each(function(){
+					this.classList.add(a);
+				});
+			}
+			a=a.split(" ");
+			return this.each(function(){
+				var b=this.className;
+				$.each(a,function(v){
+					if(b.indexOf(v)<0){
+						b+=""+v;
+					}
+				});
+				this.className=b;
+			});
+		},
 		
 		// [x.x.x] $ $.prototype.after ( )
 		// [x.x.x] $ $.prototype.after ( $ collection )
@@ -293,8 +382,52 @@
 		// [x.x.x] $ $.prototype.delegate ( String event [ , Tester test ] , Function handler )
 		
 		// [x.x.x] $ $.prototype.each ( Function iterator [ , Boolean wrapped = false ] )
+		each:function(f,w){
+			if(this.length){
+				var i=-1,
+					l=this.length,
+					p=w?$:$.identity;
+				while(++i<l){
+					if(false===f.call(p(this[i]),i)){
+						break;
+					}
+				}
+			}
+			return this;
+		},
+		
+		// [x.x.x] $ $.prototype.filter ( Function test )
+		// [x.x.x] $ $.prototype.filter ( Object test )
+		// [x.x.x] $ $.prototype.filter ( String test )
+		
+		// [x.x.x] $ $.prototype.find ( Function test )
+		// [x.x.x] $ $.prototype.find ( Object test )
+		// [x.x.x] $ $.prototype.find ( String test )
+		
+		// [0.1.0] $ $.prototype.first ( [ Number count = 1 ] )
+		first:function(c){
+			var r=$();
+			if(this.length){
+				c=c||1;
+				c=c<=this.length?this.length:c;
+				var i=-1;
+				while(++i<c){
+					r.push(this[i]);
+				}
+			}
+			return r;
+		}
 		
 		// [x.x.x] Boolean $.prototype.hasClass ( String classes )
+		
+		// [x.x.x] $ $.prototype.hover ( Function inHandler [ , Function outHandler ] )
+		
+		// [x.x.x] String $.prototype.html ( )
+		// [x.x.x] $ $.prototype.html ( String content )
+		
+		// [x.x.x] $ $.prototype.off ( String event [ , Function handler ] )
+		
+		// [x.x.x] $ $.prototype.on ( String event , Function handler )
 		
 		// [x.x.x] $ $.prototype.prepend ( Array builder )
 		// [x.x.x] $ $.prototype.prepend ( $ elements )
