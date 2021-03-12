@@ -412,25 +412,6 @@
 		// [x.x.x] String $.prototype.data ( String key )
 		// [x.x.x] $ $.prototype.data ( String key , Any value )
 		//// Requires: $.toCamel , $.toDashed
-		data:$.document.dataset?
-			function(a,b){
-				switch(arguments.length){
-					case 1:
-						if($.isString(a)){
-							return this.length?this[0].dataset[$.toCamel(a)]:"";
-						}
-					case 2:
-						
-				}
-			}:
-			function(a,b){
-				switch(arguments.length){
-					case 1:
-						
-					case 2:
-						
-				}
-			},
 		
 		// [x.x.x] $ $.prototype.delegate ( String event , Function handler )
 		// [x.x.x] $ $.prototype.delegate ( String event , Function handler , Function test )
