@@ -1,10 +1,12 @@
 (function(D,O,W){
 	var _api=true,
+		
 		_ctx=function(a){
 			a=$.isString(a)?D.querySelector(a):a;
 			a=$.isArrayLike(a)?a[0]:a;
 			return $.isElement(a)?a:D;
 		},
+		
 		_k=O.keys||function(a){
 			var r=[];
 			for(var k in a){
@@ -14,13 +16,14 @@
 			}
 			return r;
 		},
+		
 		_tS=function(a){
 			return O.prototype.toString.call(a);
 		},
 		
 		// [0.1.0] $ $ ( Array builder )
 		// [0.1.0] $ $ ( String selector [ , Element context = document ] )
-		//// Requires: build , extend , is$ , isArray , isString , api.push
+		//// Requires: $.build , $.extend , $.is$ , $.isArray , $.isString , $.prototype.push
 		$=function(a,b){
 			if(!$.is$(this)){
 				return new $(a,b);
@@ -75,7 +78,7 @@
 	// [0.1.0] Function $.bakeTest ( Function test )
 	// [0.1.0] Function $.bakeTest ( String test )
 	// [x.x.x] Function $.bakeTest ( Object test )
-	//// Requires: isFunction , isString , map
+	//// Requires: $.all , $.document , $.get , $.isElement , $.isFunction , $.isString , $.map
 	$.bakeTest=function(a){
 		if($.isFunction(a)){
 			return a;
@@ -104,32 +107,34 @@
 		return function(){return true;};
 	};
 	
-	// [0.1.0] Boolean $.build ( String alias [ , Object attributes = {} [ , Variable child1 , ... , Variable childN ] ] )
-	//// Requires: each.key , isArray , isObject , isString , make , set
-	$.build=function(a,b){
+	// [0.1.0] Boolean $.build ( String alias [ , Object attributes = {} [ , Array children = [] ] ] )
+	//// Requires: $.eachKey , $.isArray , $.isObject , $.isString , $.make , $.set
+	$.build=function(a,b,c){
 		var n=$.make(a);
 		if($.isObject(b)){
-			$.each.key(b,function(v,k){
+			$.eachKey(b,function(v,k){
 				$.set(n,k,v);
 			});
 		}
-		if(2<arguments.length){
-			var A=arguments,
-				i=1,
-				l=A.length;
-			while(++i<l){
-				if($.isString(A[i])){
-					n.insertAdjacentHTML("beforeend",A[i]);
+		if($.isArray(c)){
+			$.each(c,function(v){
+				if($.isString(v)){
+					n.insertAdjacentHTML("beforeend",v);
 				}
-				else if($.isArray(A[i])){
-					n.appendChild($.build.apply(W,A[i]));
+				else if($.isArray(v)){
+					n.appendChild($.build.apply(W,v));
 				}
-			}
+			});
 		}
 		return n;
 	};
 	
-	// [x.x.x] Function $.builder ( Array builder )
+	// [alpha] Function $.builder ( String alias [ , Object attributes = {} [ , Array children = [] ] ] )
+	$.builder=function(a,b,c){
+		return function(){
+			return $.build.call(W,a,b,c);
+		};
+	};
 	
 	// [x.x.x] Void $.delegate ( String event [ , Function test ] , Function handler )
 	// [x.x.x] Void $.delegate ( String event [ , Object test] , Function handler )
@@ -140,7 +145,7 @@
 	
 	// [0.1.0] Void $.each ( Collection collection , Function iterator [ , Any context = window ] )
 	//// Boolean iterator ( Variable value , Number index , Collection collection )
-	//// Requires: isArrayLike
+	//// Requires: $.isArrayLike
 	$.each=function(a,f,c){
 		if($.isArrayLike(a)){
 			c=c||W;
@@ -156,7 +161,7 @@
 	
 	// [0.1.0] Void $.each.key ( Object object , Function iterator [ , Any context = window ] )
 	//// iterator ( Variable value , String key , Object object )
-	$.each.key=function(o,f,c){
+	$.eachKey=function(o,f,c){
 		c=c||W;
 		var i=-1,
 			k=_k(o),
@@ -169,7 +174,7 @@
 	};
 	
 	// [0.1.0] Void $.extend ( Any extended , Object extender [ , Boolean preserve = false ] )
-	//// Requires: each.key
+	//// Requires: $.eachKey
 	$.extend=(function(){
 		var _s=function(v,k){
 				this[k]=v;
@@ -247,10 +252,12 @@
 	
 	// [x.x.x] Boolean $.isNode ( Any value )
 	
+	// [x.x.x] Boolean $.isNull ( Any value )
+	
 	// [0.1.0] Boolean $.isNumber ( Any value )
 	//// Requires: isNaN
 	$.isNumber=function(a){
-		return !$.isNaN(a)&&"[object Number]"===_tS(a);
+		return a===a&&"[object Number]"===_tS(a);
 	};
 	
 	// [0.1.0] Boolean $.isObject ( Any value )
@@ -267,9 +274,21 @@
 	
 	// [x.x.x] Boolean $.isUndefined ( Any value )
 	
-	// [x.x.x] Array $.map ( Collection collection , Function mapper [ Any context = window ] )
+	// [0.1.0] Array $.map ( Collection collection , Function mapper [ Any context = window ] )
 	//// mapper ( Variable value , Number index , Collection collection )
-	//// Requires: isArrayLike
+	//// Requires: $.isArrayLike
+	$.map=function(a,f,c){
+		var r=[];
+		if($.isArrayLike(a)){
+			c=c||W;
+			var i=-1,
+				l=a.length;
+			while(++i<l){
+				r.push(f.call(W,a[i],i,a));
+			}
+		}
+		return r;
+	};
 	
 	// [0.1.0] Element $.make ( String alias )
 	$.make=function(a){
@@ -280,7 +299,7 @@
 	
 	// [0.1.0] Function $.maker ( String alias , Function maker )
 	// [0.1.0] Function $.maker ( String alias , String tag )
-	/// Requires: isString , make
+	/// Requires: $.isString , $.make
 	$.maker=function(a,b){
 		$.make[a]=$.isString(b)?
 								new Function("return document.createElement(\""+b+"\");"):
@@ -292,6 +311,7 @@
 	$.noop=function(){};
 	
 	// [0.1.0] Void $.ready ( Function handler [ , Array arguments = [] [ , Any context = window ] ] )
+	//// Requires: $.isFunction
 	$.ready=function(h,a,c){
 		if($.isFunction(h)){
 			a=a||[];
@@ -321,6 +341,7 @@
 	
 	// [x.x.x] Function $.setter ( String alias , Function setter )
 	//// setter ( Any objectToSet , Any value )
+	//// Requires: $.isString
 	// [x.x.x] Function $.setter ( String alias , String key )
 	$.setter=function(a,b){
 		$.set[a]=$.isString(b)?
@@ -331,7 +352,8 @@
 	
 	$.api={
 		
-		// [x.x.x] $ $.prototype.addClass ( String classes )
+		// [0.1.0] $ $.prototype.addClass ( String classes )
+		//// Requires: $.each , $.prototype.each
 		addClass:function(a){
 			if($.document.classList){
 				return this.each(function(){
@@ -369,19 +391,30 @@
 		// [x.x.x] $ $.prototype.before ( $ collection )
 		// [x.x.x] $ $.prototype.before ( Array builder )
 		// [x.x.x] $ $.prototype.before ( String content )
+		//// Requires: $.clone , $.each , $.is$ , $.isArray , $.isArrayLike , $.prototype.each
 		
 		// [x.x.x] $ $.prototype.children ( [ Boolean childNodes = false ] )
 		
 		// [x.x.x] $ $.prototype.click ( [ Function handler ] )
 		
+		// [x.x.x] $ $.prototype.clone ( [ Boolean deep = false ] )
+		
 		// [x.x.x] $ $.prototype.css ( String property [ , Any value ] )
 		// [x.x.x] $ $.prototype.css ( Object properties )
 		
-		// [x.x.x] $ $.prototype.clone ( [ Boolean deep = false ] )
+		// [x.x.x] Object $.prototype.css ( Array properties )
+		// [x.x.x] $ $.prototype.css ( Object properties )
+		// [x.x.x] String $.prototype.css ( String property )
+		// [x.x.x] $ $.prototype.css ( String property , Any value )
 		
-		// [x.x.x] $ $.prototype.delegate ( String event [ , Tester test ] , Function handler )
+		// [x.x.x] $ $.prototype.delegate ( String event , Function handler )
+		// [x.x.x] $ $.prototype.delegate ( String event , Function handler , Function test )
+		// [x.x.x] $ $.prototype.delegate ( String event , Function handler , Object test )
+		// [x.x.x] $ $.prototype.delegate ( String event , Function handler , String test )
+		//// Requires: $.bakeTest
 		
-		// [x.x.x] $ $.prototype.each ( Function iterator [ , Boolean wrapped = false ] )
+		// [0.1.0] $ $.prototype.each ( Function iterator [ , Boolean wrapped = false ] )
+		//// Requires: $.identity
 		each:function(f,w){
 			if(this.length){
 				var i=-1,
@@ -396,15 +429,47 @@
 			return this;
 		},
 		
-		// [x.x.x] $ $.prototype.filter ( Function test )
+		// [0.1.0] $ $.prototype.filter ( Function test )
+		// [0.1.0] $ $.prototype.filter ( String test )
 		// [x.x.x] $ $.prototype.filter ( Object test )
-		// [x.x.x] $ $.prototype.filter ( String test )
+		//// Requires: $.bakeTest
+		filter:function(t){
+			var r=$();
+			if(this.length){
+				t=$.bakeTest(t);
+				var i=-1,
+					l=this.length;
+				while(++i<l){
+					if(t(this[i])){
+						r.push(this[i]);
+					}
+				}
+			}
+			return r;
+		},
 		
-		// [x.x.x] $ $.prototype.find ( Function test )
+		// [0.1.0] $ $.prototype.find ( Function test )
+		// [0.1.0] $ $.prototype.find ( String test )
 		// [x.x.x] $ $.prototype.find ( Object test )
-		// [x.x.x] $ $.prototype.find ( String test )
+		//// Requires: $.bakeTest
+		find:function(t){
+			var r=$();
+			if(this.length){
+				t=$.bakeTest(t);
+				var i=-1,
+					l=this.length;
+				while(++i<l){
+					if(t(this[i])){
+						r.push(this[i]);
+						break;
+					}
+				}
+			}
+			return r;
+		},
 		
 		// [0.1.0] $ $.prototype.first ( [ Number count = 1 ] )
+		//// Requires: $.prototype.push
 		first:function(c){
 			var r=$();
 			if(this.length){
@@ -416,14 +481,17 @@
 				}
 			}
 			return r;
-		}
+		},
 		
 		// [x.x.x] Boolean $.prototype.hasClass ( String classes )
 		
 		// [x.x.x] $ $.prototype.hover ( Function inHandler [ , Function outHandler ] )
 		
-		// [x.x.x] String $.prototype.html ( )
+		// [0.1.0] String $.prototype.html ( )
 		// [x.x.x] $ $.prototype.html ( String content )
+		html:function(){
+			return this.length?this[0].innerHTML||"":"";
+		},
 		
 		// [x.x.x] $ $.prototype.off ( String event [ , Function handler ] )
 		
@@ -440,10 +508,39 @@
 		// [x.x.x] $ $.prototype.prepend ( Element element )
 		
 		// [0.1.0] $ $.prototype.push ( )
+		//// Requires: $.each , $.isArrayLike , $.isElement
+		push:(function(){
+			var _p=function(e){
+					if($.isElement(e)){
+						this[this.length]=e;
+						this.length++;
+					}
+				};
+			return function(a){
+				$.each($.isArrayLike(a)?a:[a],_p,this);
+				return this;
+			};
+		})(),
 		
 		// [x.x.x] $ $.prototype.remove ( )
 		
 		// [x.x.x] $ $.prototype.removeClass ( String classes )
+		//// Requires: 
+		removeClass:function(c){
+			return this.each(
+				$.document.classList?
+				function(){this.classList.remove(c)}:
+				function(){
+					this.className=$.map(
+						this.className.split(" "),
+						function(v){
+							return -1<c.indexOf(v)?"":v;
+						}
+					).join(" ");
+				}
+			);
+		}
+		
 		// [x.x.x] $ $.prototype.toggleClass ( String classes )
 		
 	};
