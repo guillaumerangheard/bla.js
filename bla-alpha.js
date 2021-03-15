@@ -376,48 +376,76 @@
 		// [x.x.x] $ $.prototype.after ( $ collection )
 		// [x.x.x] $ $.prototype.after ( Array builder )
 		// [x.x.x] $ $.prototype.after ( String content )
+		after:function(a){
+			
+		},
 		
 		// [x.x.x] $ $.prototype.append ( Array builder )
 		// [x.x.x] $ $.prototype.append ( $ elements )
 		// [x.x.x] $ $.prototype.append ( Collection elements )
 		// [x.x.x] $ $.prototype.append ( Element element )
 		// [x.x.x] $ $.prototype.append ( String content )
+		append:function(a){
+			
+		},
 		
 		// [x.x.x] $ $.prototype.appendTo ( $ elements )
 		// [x.x.x] $ $.prototype.appendTo ( Collection elements )
 		// [x.x.x] $ $.prototype.appendTo ( Element element )
+		appendTo:function(a){
+			
+		},
 		
 		// [x.x.x] $ $.prototype.before ( )
 		// [x.x.x] $ $.prototype.before ( $ collection )
 		// [x.x.x] $ $.prototype.before ( Array builder )
 		// [x.x.x] $ $.prototype.before ( String content )
 		//// Requires: $.clone , $.each , $.is$ , $.isArray , $.isArrayLike , $.prototype.each
+		before:function(a){
+			
+		},
 		
 		// [x.x.x] $ $.prototype.children ( [ Boolean childNodes = false ] )
+		children:function(a){
+			
+		},
 		
 		// [x.x.x] $ $.prototype.click ( [ Function handler ] )
+		click:function(h){
+			
+		},
 		
 		// [x.x.x] $ $.prototype.clone ( [ Boolean deep = false ] )
-		
-		// [x.x.x] $ $.prototype.css ( String property [ , Any value ] )
-		// [x.x.x] $ $.prototype.css ( Object properties )
+		clone:function(d){
+			
+		},
 		
 		// [x.x.x] Object $.prototype.css ( Array properties )
-		// [x.x.x] $ $.prototype.css ( Object properties )
+		// [x.x.x] $      $.prototype.css ( Object properties )
 		// [x.x.x] String $.prototype.css ( String property )
-		// [x.x.x] $ $.prototype.css ( String property , Any value )
+		// [x.x.x] $      $.prototype.css ( String property , Variable value )
+		css:function(p,v){
+			
+		},
 		
 		// [x.x.x] Object $.prototype.data ( Array keys )
-		// [x.x.x] $ $.prototype.data ( Object pairs )
+		// [x.x.x] $      $.prototype.data ( Object pairs )
 		// [x.x.x] String $.prototype.data ( String key )
-		// [x.x.x] $ $.prototype.data ( String key , Any value )
+		// [x.x.x] $      $.prototype.data ( String key , Any value )
 		//// Requires: $.toCamel , $.toDashed
+		data:function(k,v){
+			
+		},
 		
 		// [x.x.x] $ $.prototype.delegate ( String event , Function handler )
 		// [x.x.x] $ $.prototype.delegate ( String event , Function handler , Function test )
 		// [x.x.x] $ $.prototype.delegate ( String event , Function handler , Object test )
 		// [x.x.x] $ $.prototype.delegate ( String event , Function handler , String test )
 		//// Requires: $.bakeTest
+		delegate:function(e,h,t){
+			
+			return this;
+		},
 		
 		// [0.1.0] $ $.prototype.each ( Function iterator [ , Boolean wrapped = false ] )
 		//// Requires: $.identity
@@ -490,6 +518,9 @@
 		},
 		
 		// [x.x.x] Boolean $.prototype.hasClass ( String classes )
+		hasClass:function(c){
+			
+		},
 		
 		// [x.x.x] $ $.prototype.hover ( Function inHandler [ , Function outHandler ] )
 		
@@ -500,18 +531,23 @@
 		},
 		
 		// [x.x.x] $ $.prototype.off ( String event [ , Function handler ] )
+		off:function(e,h){
+			
+		},
 		
 		// [x.x.x] $ $.prototype.on ( String event , Function handler )
+		on:function(e,h){
+			
+		},
 		
 		// [x.x.x] $ $.prototype.prepend ( Array builder )
 		// [x.x.x] $ $.prototype.prepend ( $ elements )
 		// [x.x.x] $ $.prototype.prepend ( Collection elements )
 		// [x.x.x] $ $.prototype.prepend ( Element element )
 		// [x.x.x] $ $.prototype.prepend ( String content )
-		
-		// [x.x.x] $ $.prototype.prepend ( $ elements )
-		// [x.x.x] $ $.prototype.prepend ( Collection elements )
-		// [x.x.x] $ $.prototype.prepend ( Element element )
+		prepend:function(a){
+			
+		},
 		
 		// [0.1.0] $ $.prototype.push ( )
 		//// Requires: $.each , $.isArrayLike , $.isElement
@@ -529,6 +565,9 @@
 		})(),
 		
 		// [x.x.x] $ $.prototype.remove ( )
+		remove:function(){
+			
+		},
 		
 		// [x.x.x] $ $.prototype.removeClass ( String classes )
 		//// Requires: 
@@ -545,9 +584,12 @@
 					).join(" ");
 				}
 			);
-		}
+		},
 		
 		// [x.x.x] $ $.prototype.toggleClass ( String classes )
+		toggleClass:function(c){
+			
+		}
 		
 	};
 	
