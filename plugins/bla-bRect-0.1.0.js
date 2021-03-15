@@ -1,3 +1,4 @@
+// [0.1.0] Rectangle $.prototype.bRect ( )
 $.api.bRect=function(){
 	var r={x:0,y:0,width:0,height:0};
 	if(this.length){
