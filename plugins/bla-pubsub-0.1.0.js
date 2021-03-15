@@ -3,6 +3,7 @@
 		hOP=_e.hasOwnProperty;
 	
 	// [0.1.0] Void $.publish ( String event [ , Object data = {} ] )
+	//// Requires: $.each , $.extend
 	$.publish=function(e,d){
 		if(hOP.call(_e,e)){
 			d=d||{};
@@ -20,6 +21,7 @@
 	};
 	
 	// [0.1.0] Void $.unsubscribe ( String event [ , Number index ] )
+	//// Requires: $.isNumber
 	$.unsubscribe=function(e,i){
 		if(hOP.call(_e,e)){
 			if($.isNumber(i)){
