@@ -136,13 +136,20 @@
 		};
 	};
 	
-	// [x.x.x] Void $.delegate ( String event , Function handler )
-	// [x.x.x] Void $.delegate ( String event , Function handler , Function test )
-	// [x.x.x] Void $.delegate ( String event , Function handler , Object test )
-	// [x.x.x] Void $.delegate ( String event , Function handler , String test )
+	// [alpha] Void $.delegate ( String event , Function handler )
+	// [alpha] Void $.delegate ( String event , Function handler , Function test )
+	// [alpha] Void $.delegate ( String event , Function handler , Object test )
+	// [alpha] Void $.delegate ( String event , Function handler , String test )
 	//// Requires: $.bakeTest
+	//// Not to be confused with $.prototype.delegate!
 	$.delegate=function(e,h,t){
-		
+		t=$.bakeTest(t);
+		D.addEventListener(e,function(E){
+			E=E.target;
+			if(t.call(E)){
+				h.call(E);
+			}
+		});
 	};
 	
 	// [0.1.0] $.document
@@ -199,6 +206,7 @@
 	})();
 					
 	// [0.1.0] Variable $.get ( Any value , String key )
+	//// To do: Add (pseudo-)paths along the lines of "key1.key2.1.3.key3".
 	$.get=function(a,k){
 		return $.get[k]?$.get[k](a):a[k];
 	};
@@ -214,9 +222,11 @@
 	};
 	
 	// [0.1.0] $.head
+	//// This is a shortcut to the DOM's <head> element.
 	$.head=D.head||D.querySelector("head");
 	
 	// [0.1.0] Variable $.identity ( Any value )
+	//// This function returns its first parameter as is.
 	$.identity=function(a){
 		return a;
 	};
@@ -281,6 +291,7 @@
 	};
 	
 	// [x.x.x] Boolean $.isRegExp ( Any value )
+	//// This function returns true if `value` is a RegExp, and false otherwise.
 	$.isRegExp=function(a){
 		return "[object RegExp]"===_tS(a);
 	};
@@ -312,6 +323,7 @@
 	};
 	
 	// [0.1.0] Element $.make ( String alias )
+	//// This function allows you to create HTMLElement's on the fly.
 	$.make=function(a){
 		return $.make[a]?
 						 $.make[a]():
@@ -320,7 +332,8 @@
 	
 	// [0.1.0] Function $.maker ( String alias , Function maker )
 	// [0.1.0] Function $.maker ( String alias , String tag )
-	/// Requires: $.isString , $.make
+	//// Requires: $.isString , $.make
+	//// This function allows you to specify a custom maker.
 	$.maker=function(a,b){
 		$.make[a]=$.isString(b)?
 			new Function("return document.createElement(\""+b+"\");"):
@@ -329,10 +342,12 @@
 	};
 	
 	// [0.1.0] Void $.noop ( )
+	//// This utility function does nothing.
 	$.noop=function(){};
 	
 	// [0.1.0] Void $.ready ( Function handler [ , Array arguments = [] [ , Any context = window ] ] )
 	//// Requires: $.isFunction
+	//// This function allows you to call a handler when the dom is ready.
 	$.ready=function(h,a,c){
 		if($.isFunction(h)){
 			a=a||[];
@@ -351,6 +366,7 @@
 	};
 	
 	// [0.1.0] Void $.set ( Any value , String key , Any value )
+	//// Default setter.
 	$.set=function(a,k,v){
 		if($.set[k]){
 			$.set[k](a,v);
@@ -360,15 +376,40 @@
 		}
 	};
 	
-	// [x.x.x] Function $.setter ( String alias , Function setter )
+	// [0.1.0] Function $.setter ( String alias , Function setter )
+	// [0.1.0] Function $.setter ( String alias , String key )
 	//// setter ( Any objectToSet , Any value )
 	//// Requires: $.isString
-	// [x.x.x] Function $.setter ( String alias , String key )
+	//// This function allows you to specify a custom setter for a (pseudo-)property.
 	$.setter=function(a,b){
 		$.set[a]=$.isString(b)?
 			new Function("e","v","e."+b+"=v;"):
 			b;
 		return $.set[a];
+	};
+	
+	// [alpha] String $.toCamel ( String value )
+	//// Requires: $.isString
+	//// This functions allows to turn a string into camel-case.
+	$.toCamel=function(a){
+		return $.isString(a)?
+			a.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,"")
+			 .replace(/(\-|_|\s)+(.)?/g,function(a,b,c){
+				return c?c.toUpperCase():"";
+			 }):
+			"";
+	};
+	
+	// [alpha] String $.toKebab ( String value )
+	//// Requires: $.isString
+	//// This function allows you to turn a string into kebab-case.
+	$.toKebab=function(a){
+		return $.isString(a)?
+			a.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,"")
+			 .replace(/[_\s]+/g,"-")
+			 .replace(/([A-Z])/g,"-$1")
+			 .toLowerCase():
+			"";
 	};
 	
 	$.api={
@@ -590,9 +631,11 @@
 			
 		},
 		
-		// [x.x.x] $ $.prototype.on ( String event , Function handler )
+		// [alpha] $ $.prototype.on ( String event , Function handler )
 		on:function(e,h){
-			
+			return this.each(function(){
+				this.addEventListener(e,h);
+			});
 		},
 		
 		// [x.x.x] $ $.prototype.prepend ( Array builder )
@@ -639,6 +682,12 @@
 					).join(" ");
 				}
 			);
+		},
+		
+		// [x.x.x] $ $.prototype.removeClass ( String classes )
+		//// Requires: 
+		replaceClass:function(c){
+			
 		},
 		
 		// [x.x.x] $ $.prototype.toggleClass ( String classes )
