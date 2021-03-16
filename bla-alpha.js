@@ -93,10 +93,10 @@
 					}
 					else{
 						return new Function("e",a.indexOf(" ")<0?
-												"return $.isElement(e)?-1<e.className.indexOf(\""+a.substr(1)+"\");":
-												"if($.isElement(e)){var c=e.className;return $.all([\""+
-												a.substr(1).split(" ").join("\",\"")+
-												"\"],function(v){return -1<c.indexOf(v);});}");
+							"return $.isElement(e)?-1<e.className.indexOf(\""+a.substr(1)+"\");":
+							"if($.isElement(e)){var c=e.className;return $.all([\""+
+							a.substr(1).split(" ").join("\",\"")+
+							"\"],function(v){return -1<c.indexOf(v);});}");
 					}
 				case"<":
 					return new Function("e","return \""+a.substring(1,a.length-2).toUpperCase()+"\"===a.tagName;");
@@ -136,9 +136,14 @@
 		};
 	};
 	
-	// [x.x.x] Void $.delegate ( String event [ , Function test ] , Function handler )
-	// [x.x.x] Void $.delegate ( String event [ , Object test] , Function handler )
-	// [x.x.x] Void $.delegate ( String event [ , String test ] , Function handler )
+	// [x.x.x] Void $.delegate ( String event , Function handler )
+	// [x.x.x] Void $.delegate ( String event , Function handler , Function test )
+	// [x.x.x] Void $.delegate ( String event , Function handler , Object test )
+	// [x.x.x] Void $.delegate ( String event , Function handler , String test )
+	//// Requires: $.bakeTest
+	$.delegate=function(e,h,t){
+		
+	};
 	
 	// [0.1.0] $.document
 	$.document=D.documentElement;
@@ -208,7 +213,8 @@
 		return $.get[a];
 	};
 	
-	// [x.x.x} $.head
+	// [0.1.0] $.head
+	$.head=D.head||D.querySelector("head");
 	
 	// [0.1.0] Variable $.identity ( Any value )
 	$.identity=function(a){
@@ -232,6 +238,9 @@
 	};
 	
 	// [x.x.x] Boolean $.isDate ( Any value )
+	$.isDate=function(a){
+		
+	};
 	
 	// [x.x.x] Boolean $.isDefined ( Any value )
 	
@@ -251,8 +260,14 @@
 	};
 	
 	// [x.x.x] Boolean $.isNode ( Any value )
+	$.isNode=function(a){
+		
+	};
 	
 	// [x.x.x] Boolean $.isNull ( Any value )
+	$.isNull=function(a){
+		return null===a||"[object Null]"===_tS(a);
+	};
 	
 	// [0.1.0] Boolean $.isNumber ( Any value )
 	//// Requires: isNaN
@@ -266,6 +281,9 @@
 	};
 	
 	// [x.x.x] Boolean $.isRegExp ( Any value )
+	$.isRegExp=function(a){
+		return "[object RegExp]"===_tS(a);
+	};
 	
 	// [0.1.0] Boolean $.isString ( Any value )
 	$.isString=function(a){
@@ -273,6 +291,9 @@
 	};
 	
 	// [x.x.x] Boolean $.isUndefined ( Any value )
+	$.isUndefined=function(a){
+		
+	};
 	
 	// [0.1.0] Array $.map ( Collection collection , Function mapper [ Any context = window ] )
 	//// mapper ( Variable value , Number index , Collection collection )
@@ -302,8 +323,8 @@
 	/// Requires: $.isString , $.make
 	$.maker=function(a,b){
 		$.make[a]=$.isString(b)?
-								new Function("return document.createElement(\""+b+"\");"):
-								b;
+			new Function("return document.createElement(\""+b+"\");"):
+			b;
 		return $.make[a];
 	};
 	
@@ -354,6 +375,8 @@
 		
 		// [0.1.0] $ $.prototype.addClass ( String classes )
 		//// Requires: $.each , $.prototype.each
+		//// This functions allows you to add one (or more) class(es as a space-separated string)
+		//// to all elements in the collection.
 		addClass:function(a){
 			if($.document.classList){
 				return this.each(function(){
@@ -432,10 +455,42 @@
 		// [x.x.x] $      $.prototype.data ( Object pairs )
 		// [x.x.x] String $.prototype.data ( String key )
 		// [x.x.x] $      $.prototype.data ( String key , Any value )
-		//// Requires: $.toCamel , $.toDashed
-		data:function(k,v){
-			
-		},
+		//// Requires: $.isArray , $.isObject , $.isString , $.toCamel , $.toDashed , $.prototype.each
+		data:($.document.dataset?
+			function(k,v){
+				if(this.length){
+					switch(arguments.length){
+						case 1:
+							var r;
+							if($.isArray(k)){
+								r={};
+								$.each(k,function(a){
+									a=$.toCamel(a);
+									r[a]=this[0].dataset[a];
+								});
+							}
+							else if($.isObject(k)){
+								r=this;
+								$.eachKey(k,function(a,b){
+									this[0].dataset[$.toCamel(b)]=a;
+								});
+							}
+							else if($.isString(k)){
+								r=this[0].dataset[$.toCamel(k)]||"";
+							}
+							return r;
+						case 2:
+							k=$.toCamel(k);
+							return this.each(function(){
+								this.data[k]=""+v;
+							});
+					}
+				}
+				return this;
+			}:
+			function(k,v){
+				
+			}),
 		
 		// [x.x.x] $ $.prototype.delegate ( String event , Function handler )
 		// [x.x.x] $ $.prototype.delegate ( String event , Function handler , Function test )
