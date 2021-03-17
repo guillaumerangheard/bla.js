@@ -21,6 +21,22 @@
 			return O.prototype.toString.call(a);
 		},
 		
+		/*
+		$ v0.1.1
+		Based on DOMtastic
+		var _s=/^[.#]?[\w-]*$/;
+		var q=function(s,c){
+			if(_s.test(s)){
+				switch(s.charAt(0)){
+					case"#":return c.getElementById(s.substr(1));
+					case".":return c.getElementsByClassName(s.substr(1));
+					default:return c.getElementsByTagName(s);
+				}
+			}
+			return c.querySelectorAll(s);
+		}
+		*/
+		
 		// [0.1.0] $ $ ( Array builder )
 		// [0.1.0] $ $ ( String selector [ , Element context = document ] )
 		//// Requires: $.build , $.extend , $.is$ , $.isArray , $.isString , $.prototype.push
