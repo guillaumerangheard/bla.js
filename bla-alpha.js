@@ -252,6 +252,11 @@
 		return a instanceof $;
 	};
 	
+	// [0.1.0] Boolean $.isArguments ( Any value )
+	$.isArguments=function(a){
+		return "[object Arguments]"===_tS(a)||(a!=null&&"object"===typeof a&&"callee" in a);
+	};
+	
 	// [0.1.0] Boolean $.isArray ( Any value )
 	$.isArray=function(a){
 		return "[object Array]"===_tS(a);
@@ -263,16 +268,30 @@
 		return $.isNumber(a.length);
 	};
 	
-	// [x.x.x] Boolean $.isDate ( Any value )
-	$.isDate=function(a){
-		
+	// [0.1.0] Boolean $.isBoolean ( Any value )
+	$.isBoolean=function(a){
+		return true===a||false===a||"[object Boolean]"===_tS(a);
 	};
 	
-	// [x.x.x] Boolean $.isDefined ( Any value )
+	// [0.1.0] Boolean $.isDate ( Any value )
+	$.isDate=function(a){
+		return "[object Date]"===_tS(a);
+	};
+	
+	// [0.1.0] Boolean $.isDefined ( Any value )
+	//// Requires: $.isUndefined
+	$.isDefined=function(a){
+		return !$.isUndefined(a);
+	};
 	
 	// [0.1.0] Boolean $.isElement ( Any value )
 	$.isElement=function(a){
-		return a&&1===a.nodeType;
+		return $.isObject(a)&&1===a.nodeType;
+	};
+	
+	// [0.1.0] Boolean $.isError ( Any value )
+	$.isError=function(a){
+		return "[object Error]"===_tS(a);
 	};
 	
 	// [0.1.0] Boolean $.isFunction ( Any value )
@@ -285,9 +304,9 @@
 		return a!==a;
 	};
 	
-	// [x.x.x] Boolean $.isNode ( Any value )
+	// [0.1.0] Boolean $.isNode ( Any value )
 	$.isNode=function(a){
-		
+		return $.isObject(a)&&0<a.nodeType;
 	};
 	
 	// [x.x.x] Boolean $.isNull ( Any value )
@@ -319,7 +338,7 @@
 	
 	// [x.x.x] Boolean $.isUndefined ( Any value )
 	$.isUndefined=function(a){
-		
+		return a===void 0;
 	};
 	
 	// [0.1.0] Array $.map ( Collection collection , Function mapper [ Any context = window ] )
