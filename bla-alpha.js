@@ -94,10 +94,16 @@
 	// [0.1.0] Function $.bakeTest ( Function test )
 	// [0.1.0] Function $.bakeTest ( String test )
 	// [x.x.x] Function $.bakeTest ( Object test )
-	//// Requires: $.all , $.document , $.get , $.isElement , $.isFunction , $.isString , $.map
+	//// Requires: $.all , $.document , $.each.key , $.get , $.isElement , $.isFunction , $.isString , $.map
 	$.bakeTest=function(a){
 		if($.isFunction(a)){
 			return a;
+		}
+		if($.isObject(a)){
+			var k=_k(a);
+			return new Function("e","return "+$.map(k,function(v){
+				return "e."+v+"==="+a[v];
+			}).join("&&")+";");
 		}
 		if($.isString(a)){
 			switch(a.charAt(0)){
