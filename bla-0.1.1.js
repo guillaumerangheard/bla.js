@@ -266,9 +266,41 @@
 		return r;
 	};
 	
+	// [x.x.x] Element $.make ( String alias )
+	$.make=function(a){};
+	
+	// [0.1.0] Function $.make.test ( Function test )
+	// [x.x.x] Function $.make.test ( Object test )
+	// [0.1.0] Function $.make.test ( String test )
+	$.make.test=function(a){
+		if($.isFunction(a)){
+			return a;
+		}
+		else if($.isString(a)){
+			switch(a.charAt(0)){
+				case"#":
+					return new Function("e","return \""+a+"\"===e.id;");
+				case".":
+					return new Function("e",(
+						$.document.classList?
+							"return $.isElement(e)?e.classList.contains(\""+a.substr(1)+"\"):false;":
+							(a.indexOf(" ")<0?
+							 	"return $.isElement(e)?-1<e.className.indexOf(\""+a.substr(1)+"\"):false;":
+							 	"if($.isElement(e)){"+
+							 		"var c=e.className;"+
+							 		"return $.all([\""+a.substr(1).split(" ").join("\",\"")+"\"],function(v){"+
+							 			"return -1<c.indexOf(v);"+
+							 		"});"+
+							 	"}"+
+							 	"return false;"
+							)
+					));
+					
+			}
+		}
+	};
+	
 	/*
-	$.make
-	$.make.test
 	$.maker
 	$.map
 	*/
