@@ -11,6 +11,10 @@
 			return O.prototype.toString.call(a);
 		},
 		
+		// [0.1.0] $ $ ( )
+		// [0.1.0] $ $ ( Array builder )
+		// [0.1.0] $ $ ( Element element )
+		// [0.1.0] $ $ ( String selector )
 		$=function(a,b){
 			if(!$.is$(this)){
 				return new $(a,b);
@@ -30,10 +34,59 @@
 	
 	/*
 	$.after
-	$.all
-	$.any
-	$.build
 	*/
+	
+	// [0.1.0] Boolean $.all ( ArrayLike collection , Function test [ , Any context = window ] )
+	//// Requires: $.isArrayLike
+	$.all=function(a,t,c){
+		if($.isArrayLike(a)){
+			c=c||W;
+			var i=-1,l=a.length;
+			while(++i<l){
+				if(!t.call(c,a[i],i,a)){
+					return false;
+				}
+			}
+			return true;
+		}
+	};
+	
+	// [0.1.0] Boolean $.any ( ArrayLike collection , Function test [ , Any context = window ] )
+	//// Requires: $.isArrayLike
+	$.any=function(a,t,c){
+		if($.isArrayLike(a)){
+			c=c||W;
+			var i=-1,l=a.length;
+			while(++i<l){
+				if(t.call(c,a[i],i,a)){
+					return true;
+				}
+			}
+			return false;
+		}
+	};
+	
+	// [0.1.0] Element $.build ( String alias [ , Object attributes = {} [ , Array children = [] ] ] )
+	//// Requires: $.each , $.each.key , $.isArray , $.isObject , $.isString , $.make , $.set
+	$.build=function(a,b,c){
+		var n=$.make(a);
+		if($.isObject(b)){
+			$.each.key(b,function(v,k){
+				$.set(n,k,v);
+			});
+		}
+		if($.isArray(c)){
+			$.each(c,function(v){
+				if($.isArray(v)){
+					n.appendChild($.build.apply(W,v));
+				}
+				else if($.isString(v)){
+					n.insertAdjacentHTML("beforeend",v);
+				}
+			});
+		}
+		return n;
+	};
 	
 	// [0.1.0] Element $.document
 	$.document=D.documentElement;
@@ -68,6 +121,7 @@
 	*/
 	
 	// [0.1.0] Any $.extend ( Any extended , Object extender [ , Boolean preserve = false ] )
+	//// Requires: $.each.key
 	$.extend=(function(){
 		var _s=function(v,k){
 				this[k]=v;
@@ -105,25 +159,94 @@
 		return a instanceof $;
 	};
 	
-	/*
-	$.isArguments
-	$.isArray
-	$.isArrayLike
-	$.isBoolean
-	$.isDate
-	$.isDefined
-	$.isElement
-	$.isError
-	$.isFunction
-	$.isNaN
-	$.isNode
-	$.isNull
-	$.isNumber
-	$.isObject
-	$.isRegExp
-	$.isString
-	$.isUndefined
-	*/
+	// [0.1.0] Boolean $.isArguments ( Any value )
+	$.isArguments=function(a){
+		return "[object Arguments]"===_S(a)||(a!=null&&"object"===typeof a&&"callee" in a);
+	};
+	
+	// [0.1.0] Boolean $.isArray ( Any value )
+	$.isArray=function(a){
+		return "[object Array]"===_S(a);
+	};
+	
+	// [0.1.0] Boolean $.isArrayLike ( Any value )
+	//// Requires: $.isNumber
+	$.isArrayLike=function(a){
+		return $.isNumber(a.length);
+	};
+	
+	// [0.1.0] Boolean $.isBoolean ( Any value )
+	$.isBoolean=function(a){
+		return true===a||false===a||"[object Boolean]"===_S(a);
+	};
+	
+	// [0.1.0] Boolean $.isDate ( Any value )
+	$.isDate=function(a){
+		return "[object Date]"===_S(a);
+	};
+	
+	// [0.1.0] Boolean $.isDefined ( Any value )
+	//// Requires: $.isUndefined
+	$.isDefined=function(a){
+		return !$.isUndefined(a);
+	};
+	
+	// [0.1.0] Boolean $.isElement ( Any value )
+	//// Requires: $.isObject
+	$.isElement=function(a){
+		return $.isObject(a)&&1===a.nodeType;
+	};
+	
+	// [0.1.0] Boolean $.isError ( Any value )
+	$.isError=function(a){
+	return "[object Error]"===_S(a);
+	};
+	
+	// [0.1.0] Boolean $.isFunction ( Any value )
+	$.isFunction=function(a){
+		return "[object Function]"===_S(a)||"function"===typeof a;
+	};
+	
+	// [0.1.0] Boolean $.isNaN ( Any value )
+	$.isNaN=function(a){
+		return a!==a;
+	};
+	
+	// [0.1.0] Boolean $.isNode ( Any value )
+	//// Requires: $.isObject
+	$.isNode=function(a){
+		return $.isObject(a)&&0<a.nodeType;
+	};
+	
+	// [0.1.0] Boolean $.isNull ( Any value )
+	$.isNull=function(a){
+		return null===a||"[object Null]"===_S(a);
+	};
+	
+	// [0.1.0] Boolean $.isNumber ( Any value )
+	$.isNumber=function(a){
+		return a===a&&"[object Number]"===_S(a);
+	};
+	
+	// [0.1.0] Boolean $.isObject ( Any value )
+	$.isObject=function(a){
+		return O(a)===a;
+	};
+	
+	// [0.1.0] Boolean $.isRegExp ( Any value )
+	$.isRegExp=function(a){
+		return "[object RegExp]"===_S(a);
+	};
+	
+	// [0.1.0] Boolean $.isString ( Any value )
+	$.isString=function(a){
+		return "[object String]"===_S(a);
+	};
+	
+	// [0.1.0] Boolean $.isUndefined ( Any value )
+	$.isUndefined=function(a){
+		return a===void 0;
+	};
 	
 	// [0.1.1] Array $.keys ( Any value )
 	$.keys=O.keys||function(a){
