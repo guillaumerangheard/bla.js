@@ -4,12 +4,25 @@
 	var _A=true,
 		
 	    // [0.1.0] Element _C ( )
-		// [0.1.0] Element _C ( Element element )
+		// [0.1.0] Element _C ( Element context )
 		// [0.1.0] Element _C ( String selector )
 		_C=function(a){
 			a=$.isString(a)?D.querySelector(a):a;
 			a=$.isArrayLike(a)?a[0]:a;
 			return $.isElement(a)?a:D;
+		},
+		
+		// [0.1.0] Void _E ( Event e )
+		_E=function(e){
+			var o=$.on[e.type];
+			if(o){
+				var i=-1,l=o.length,t=e.target;
+				while(++i<l){
+					if(o[i].test(t)){
+						o[i].callback.call(t,e);
+					}
+				}
+			}
 		},
 		
 		// [0.1.0] String _S ( Any value )
@@ -21,7 +34,7 @@
 		// [0.1.0] $ $ ( Array builder )
 		// [0.1.0] $ $ ( Element element )
 		// [0.1.0] $ $ ( String selector )
-		//// Requires: $.build , $.extend , $.is$ , $.isArray , $.isString
+		//// Requires: $.api , $.build , $.extend , $.is$ , $.isArray , $.isString , $.prototype.push
 		$=function(a,b){
 			if(!$.is$(this)){
 				return new $(a,b);
@@ -39,9 +52,13 @@
 			);
 		};
 	
-	/*
-	$.after
-	*/
+	// [0.1.1] Void $.after ( Number duration , Function callback [ , Array arguments = [] [ , Any context = window ] ] )
+	// [x.x.x] Void $.after ( String duration , Function callback [ , Array arguments = [] [ , Any context = window ] ] )
+	$.after=function(d,f,a,c){
+		return setTimeout(function(){
+			f.apply(c||W,a||[]);
+		});
+	};
 	
 	// [0.1.0] Boolean $.all ( ArrayLike collection , Function test [ , Any context = window ] )
 	//// Requires: $.isArrayLike
@@ -95,6 +112,17 @@
 		return n;
 	};
 	
+	/*
+	$.builder=function(){};
+	
+	$.css={
+		get:function(){},
+		getter:function(){},
+		set:function(){},
+		setter:function(){}
+	};
+	*/
+	
 	// [0.1.0] Element $.document
 	$.document=D.documentElement;
 	
@@ -124,6 +152,8 @@
 	};
 	
 	/*
+	// [x.x.x] Void $.every ( Number duration , Function callback [ , Array arguments = [] [ , Any context = window ] ] )
+	// [x.x.x] Void $.every ( String duration , Function callback [ , Array arguments = [] [ , Any context = window ] ] )
 	$.every
 	*/
 	
@@ -147,8 +177,13 @@
 		};
 	})();
 	
+	// [0.1.0] Void $.fire ( String event [ , Any data ] )
+	$.fire=function(a,b){
+		var c=b?new CustomEvent(a,{detail:b}):new Event(a);
+		W.dispatchEvent(c);
+	};
+	
 	/*
-	$.fire
 	$.get
 	$.getter
 	*/
@@ -266,8 +301,12 @@
 		return r;
 	};
 	
-	// [x.x.x] Element $.make ( String alias )
-	$.make=function(a){};
+	// [0.1.0] Element $.make ( String alias )
+	$.make=function(a){
+		return $.maker[a]?
+			$.maker[a]():
+			D.createElement(a);
+	};
 	
 	// [0.1.0] Function $.make.test ( Function test )
 	// [x.x.x] Function $.make.test ( Object test )
@@ -300,19 +339,88 @@
 		}
 	};
 	
-	/*
-	$.maker
-	$.map
-	*/
+	// [0.1.0] Function $.maker ( String alias )
+	// [0.1.0] Function $.maker ( String alias , Function maker )
+	// [0.1.0] Function $.maker ( String alias , String tagName )
+	$.maker=function(a,b){
+		if($.isFunction(b)){
+			$.maker[a]=b;
+		}
+		else if($.isString(b)){
+			$.maker[a]=new Function("return document.createElement(\""+b+"\");");
+		}
+		return $.maker[a];
+	};
+	
+	// [0.1.0] Array $.map ( ArrayLike collection , Function mapper [ , Any context = window ] )
+	$.map=function(a,f,c){
+		var r=[];
+		if($.isArrayLike(a)){
+			c=c||W;
+			var i=-1,l=a.length;
+			while(++i<l){
+				r.push(f.call(c,a[i],i,a));
+			}
+		}
+		return r;
+	};
 	
 	// [0.1.0] Void $.noop ( )
 	$.noop=function(){};
 	
 	/*
 	$.off
-	$.on
+	*/
+	
+	// [0.1.0] Void $.on ( String events , Function handler )
+	// [0.1.0] Void $.on ( String events , Function handler , Function test )
+	// [x.x.x] Void $.on ( String events , Function handler , Object test )
+	// [0.1.0] Void $.on ( String events , Function handler , String test )
+	//// Requires: $.make.test
+	//// Not to be confused with $.prototype.on!
+	$.on=function(e,h,t){
+		e=-1z.indexOf(" ")?e.plsit(" "):[e];
+		var E,i=-1,l=e.length;
+		while(++i<l){
+			E=e[i];
+			if(!$.on[E]){
+				$.on[E]=[];
+				W.addEventListener(E,_H,true);
+			}
+			$.on[E].push({
+				test:$.make.test(t),
+				callback:h
+			});
+		}
+	};
+	
+	/*
 	$.publish
-	$.ready
+	*/
+	
+	// [0.1.0] Void $.ready ( Function handler [ , Array arguments = [] [ , Any context = window ] ] )
+	$.ready=function(h,a,c){
+		if($.isFunction(h)){
+			a=a||[];
+			c=c||W;
+			if(D.addEventListener){
+				D.addEventListener("DOMContentLoaded",function(){
+					return h.apply(c,a);
+				});
+			}
+			else{
+				D.attachEvent("onreadystatechange",function(){
+					return h.apply(c,a);
+				});
+			}
+		}
+	};
+	
+	/*
+	$.reduce
+	$.scroll
+	$.scroll.x
+	$.scroll.y
 	$.set
 	$.setter
 	$.subscribe
@@ -320,17 +428,63 @@
 	$.toCamel
 	$.toKebab
 	$.typeOf
-	$.viewport
-	$.viewport.height
-	$.viewport.width
 	*/
 	
+	// [0.1.0] Object $.version ( )
+	$.version=(function(){
+		var _v={major:0,minor:1,patch:0};
+		return function(){
+			return _v;
+		};
+	})();
+	
+	// [0.1.0] Object $.viewport ( )
+	// [0.1.0] Number $.viewport.height ( )
+	// [0.1.0] Number $.viewport.width ( )
+	$.viewport=(function(){
+		var _h=function(){
+				var a=$.document.clientHeight,b=W.innerHeight;
+				return a<b?b:a;
+			},
+			_w=function(){
+				var a=$.document.clientWidth,b=W.innerWidth;
+				return a<b?b:a;
+			},
+			V=function(){
+				return {
+					width:_w(),
+					height:_h()
+				};
+			};
+		V.height=_h;
+		V.width=_w;
+		return V;
+	})();
+	
 	$.api={
-		/*
 		
 		// [0.1.0] $ $.prototype.addClass ( String classes )
-		addClass
+		addClass:function(a){
+			if($.document.classList){
+				return this.each(function(){
+					this.classList.add(a);
+				});
+			}
+			else{
+				a=a.split(" ");
+				return this.each(function(){
+					var b=this.className;
+					$.each(a,function(v){
+						if(b.indexOf(v)<0){
+							b+=v;
+						}
+					});
+					this.className=b;
+				});
+			}
+		},
 		
+		/*
 		after
 		
 		append
