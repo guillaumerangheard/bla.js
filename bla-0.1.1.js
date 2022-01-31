@@ -1,12 +1,18 @@
 (function(D,O,W){
+		
+		// [0.1.0] _A
 	var _A=true,
 		
+	    // [0.1.0] Element _C ( )
+		// [0.1.0] Element _C ( Element element )
+		// [0.1.0] Element _C ( String selector )
 		_C=function(a){
 			a=$.isString(a)?D.querySelector(a):a;
 			a=$.isArrayLike(a)?a[0]:a;
 			return $.isElement(a)?a:D;
 		},
 		
+		// [0.1.0] String _S ( Any value )
 		_S=function(a){
 			return O.prototype.toString.call(a);
 		},
@@ -15,6 +21,7 @@
 		// [0.1.0] $ $ ( Array builder )
 		// [0.1.0] $ $ ( Element element )
 		// [0.1.0] $ $ ( String selector )
+		//// Requires: $.build , $.extend , $.is$ , $.isArray , $.isString
 		$=function(a,b){
 			if(!$.is$(this)){
 				return new $(a,b);
@@ -277,39 +284,142 @@
 	$.set
 	$.setter
 	$.subscribe
+	$.Template
 	$.toCamel
 	$.toKebab
+	$.typeOf
+	$.viewport
+	$.viewport.height
+	$.viewport.width
 	*/
 	
 	$.api={
 		/*
+		
+		// [0.1.0] $ $.prototype.addClass ( String classes )
 		addClass
+		
 		after
+		
 		append
+		
 		appendTo
+		
 		before
+		
+		// [0.1.0] Object $.prototype.bRect ( )
+		bRect
+		
+		// [x.x.x] $ $.prototype.children ( [ Boolean childNodes = false ] )
 		children
+		
 		click
+		
+		// [x.x.x] $      $.prototype.css ( Object pairs )
+		// [x.x.x] String $.prototype.css ( String key )
+		// [x.x.x] $      $.prototype.css ( String key , Any value )
 		css
+		
+		// [x.x.x] Object $.prototype.data ( Array keys )
+		// [x.x.x] $      $.prototype.data ( Object pairs )
+		// [x.x.x] String $.prototype.data ( String key )
+		// [x.x.x] $      $.prototype.data ( String key , Any value )
 		data
+		
 		delegate
-		each
-		filter
-		find
+		*/
+		
+		// [0.1.0] $ $.prototype.each ( Function iterator [ , Boolean wrapped = false ] )
+		//// Requires: $.identity
+		each:function(f,w){
+			if(this.length){
+				var i=-1,l=this.length,p=w?$:$.identity;
+				while(++i<l){
+					if(false===f.call(p(this[i]),i)){
+						break;
+					}
+				}
+			}
+			return this;
+		},
+		
+		// [0.1.0] $ $.prototype.filter ( Function test )
+		// [x.x.x] $ $.prototype.filter ( Object test )
+		// [0.1.0] $ $.prototype.filter ( String test )
+		//// Requires: $.make.test
+		filter:function(t){
+			var r=$();
+			if(this.length){
+				t=$.make.test(t);
+				var i=-1,l=this.length;
+				while(++i<l){
+					if(t(this[i])){
+						r.push(this[i]);
+					}
+				}
+			}
+			return r;
+		},
+		
+		// [0.1.0] $ $.prototype.find ( Function test )
+		// [x.x.x] $ $.prototype.find ( Object test )
+		// [0.1.0] $ $.prototype.find ( String test )
+		//// Requires: $.make.test
+		find:function(t){
+			var r=$();
+			if(this.length){
+				t=$.make.test(t);
+				var i=-1,l=this.length;
+				while(++i<l){
+					if(t(this[i])){
+						r.push(this[i]);
+						break;
+					}
+				}
+			}
+			return r;
+		}
+		
+		/*
+		// [x.x.x] $ $.prototype.fire ( String event )
+		// [x.x.x] $ $.prototype.fire ( String event , Object data )
 		fire
+		
+		// [0.1.0] $ $.prototype.first ( [ Number count = 1 ] )
 		first
+		
+		// [0.1.0] Boolean $.prototype.hasClass ( String classes )
 		hasClass
+		
+		// [x.x.x] $ $.prototype.hover ( )
+		// [x.x.x] $ $.prototype.hover ( Function inHandler [ , Function outHandler ] )
 		hover
+		
+		// [0.1.0] String $.prototype.html ( )
+		// [x.x.x] $      $.prototype.html ( String content )
 		html
+		
+		// [x.x.x] $ $.prototype.last ( [ Number count = 1 ] )
+		last
+		
 		off
+		
+		// [0.1.0] $ $.prototype.on ( String events , Function handler )
 		on
+		
 		prepend
 		prependTo
 		push
 		remove
+		
+		// [0.1.0] $ $.prototype.removeClass ( String classes )
 		removeClass
+		
 		replaceClass
+		
+		// [0.1.0] $ $.prototype.toggleClass ( String classes )
 		toggleClass
+		
 		*/
 	};
 	
