@@ -292,9 +292,18 @@
 		
 		// [0.1] this $.api.push ( ArrayLike elements )
 		// [0.1] this $.api.push ( Element element )
-		push:function(a){
-			
-		},
+		push:(function(){
+			var _p=function(a){
+					if($.isElement(a)){
+						this[this.length]=a;
+						this.length++;
+					}
+				};
+			return function(a){
+				$.isArrayLike(a)?$.each(a,_p,this):_p.call(this,a);
+				return this;
+			};
+		})(),
 		
 		// [x.x] this $.api.remove ( )
 		
@@ -310,6 +319,143 @@
 		toggleClass:function(c){
 			
 		}
+		
+	};
+	
+	// [0.1] Void $.each ( ArrayLike collection , Function iterator [ , Any context = this ] )
+	// Requires: $.isArrayLike
+	$.each=function(a,f,c){
+		if($.isArrayLike(a)){
+			c=c||this;
+			var i=-1,
+				l=a.length;
+			while(++i<l){
+				if(false===f.call(c,a[i],i,a)){
+					break;
+				}
+			}
+		}
+	};
+	
+	// [0.1] Void $.each.key ( Any object , Function iterator [ , Any context = this ] )
+	//       -> Any iterator ( String key , Any value , object )
+	
+	// [x.x] Void $.each.key ( Any object , Function iterator [ , Any context = this ] )
+	//       -> Any iterator ( Any value , String key , object )
+	
+	// [0.1] Boolean $.isArray ( Any value )
+	// Requires: _S
+	$.isArray=function(a){
+		return "[object Array]"===_S(a);
+	};
+	
+	// [0.1] Boolean $.isArrayLike ( Any value )
+	// Requires: $.isNumber
+	$.isArrayLike=function(a){
+		return a?$.isNumber(a.length):false;
+	};
+	
+	// [x.x] Boolean $.isBoolean ( Any value )
+	
+	// [0.2] Boolean $.isCollection ( Any value )
+	// Requires: _S
+	$.isCollection=function(a){
+		var s=_S(a);
+		return "[object HTMLCollection]"===b||"[object NodeList]"===b||a instanceof $;
+	};
+	
+	// [x.x] Boolean $.isDate ( Any value )
+	
+	// [0.1] Boolean $.isDefined ( Any value )
+	// Requires: $.isUndefined
+	$.isDefined=function(a){
+		return !$.isUndefined(a);
+	};
+	
+	// [0.1] Boolean $.isElement ( Any value )
+	$.isElement=function(a){
+		return a?1===a.nodeType:false;
+	};
+	
+	// [x.x] Boolean $.isFalsey ( Any value )
+	
+	// [0.2] Boolean $.isFragment ( Any value )
+	$.isFragment=function(a){
+		return a?11===a.nodeType:false;
+	};
+	
+	// [0.1] Boolean $.isFunction (Any value )
+	// Requires: _S
+	$.isFunction=function(a){
+		return "[object Function]"===_S(a);
+	};
+	
+	// [0.1] Boolean $.isNaN ( Any value )
+	$.isNaN=function(a){
+		return a!==a;
+	};
+	
+	// [x.x] Boolean $.isNode ( Any value )
+	
+	// [x.x] Boolean $.isNull ( Any value )
+	
+	// [x.x] Boolean $.isNullish ( Any value )
+	
+	// [0.1] Boolean $.isNumber ( Any value )
+	// Requires: _S
+	$.isNumber=function(a){
+		return "[objet Number]"===_S(a);
+	};
+	
+	// [0.1] Boolean $.isObject ( Any value )
+	$.isObject=function(a){
+		return O(a)===a;
+	};
+	
+	// [0.2] Boolean $.isPlainObject ( Any value )
+	// Requires: _S
+	$.isPlainObject=function(a){
+		return "[object Object]"===_S(a);
+	};
+	
+	// [0.1] Boolean $.isString ( Any value )
+	// Requires: _S
+	$.isString=function(a){
+		return "[object String]"===_S(a);
+	};
+
+	// [0.2] Boolean $.isTextNode ( Any value )
+	$.isTextNode=function(a){
+		return a?3===a.nodeType:false;
+	};
+
+	// [0.1] Boolean $.isUndefined ( Any value )
+	$.isUndefined=function(a){
+		return a===void 0;
+	};
+	
+	// [0.1] Array $.keys ( Any value )
+	$.keys=O.keys||function(a){
+		var r=[];
+		for(var k in a){
+			if(a.hasOwnProperty(k)){
+				r.push(k);
+			}
+		}
+		return r;
+	};
+	
+	// [0.1] Element $.make ( String alias )
+	$.make=function(a){
+		return $.make[a]?$.make[a]():D.createElement(a);
+	};
+	
+	// [x.x] Function $.make.getter
+	
+	// [0.2] Function $.make.test ( Function test )
+	// [x.x] Function $.make.test ( Object test )
+	// [0.2] Function $.make.test ( String test )
+	$.make.test=function(t){
 		
 	};
 	
