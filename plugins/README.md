@@ -1,19 +1,19 @@
 # bla.js plugins
 I created a bunch of little plugins while I was writing [bla.js](https://github.com/guillaumerangheard/blajs).
 
-## $.aspectRatio ( ) [v0.1.0]
+## $.aspectRatio ( ) [alpha]
 This static plugin was inspired by [verge](https://github.com/ryanve/verge), by [Ryan Van Etten](https://github.com/ryanve). It returns the viewport's aspect ratio in the form of a number, and requires **$.viewport** 0.1+ to work. Not to be confused with **$.api.aspectRatio**, which returns a given _element_'s aspect ratio.
 
 ## $.api.aspectRatio ( ) [alpha]
 This instance plugin was inspired by [verge](https://github.com/ryanve/verge), by [Ryan Van Etten](https://github.com/ryanve). It returns the first element's aspect ratio in the form of a number, and requires **$.api.bRect** 0.1+ to work. Not to be confused with **$.aspectRatio**, which returns the _viewport_'s aspect ratio.
 
-## $.api.bRect ( ) [v0.1.0]
+## $.api.bRect ( ) [alpha]
 This one-line, zero-dependency instance plugin is basically a wrapper around [`element.getBoundingClientRect`](https://developer.mozilla.org/fr/docs/Web/API/Element/getBoundingClientRect). It returns an object describing the first element's position and dimensions with four properties: `left`, `top`, `width`, and `height`.
 
-## $.api.isInViewport ( ) [v0.1.0]
+## $.api.isInViewport ( ) [alpha]
 This instance plugin was inspired by [verge](https://github.com/ryanve/verge), by [Ryan Van Etten](https://github.com/ryanve). It requires **bRect** 0.1+ and **viewport** 0.1+ to work, and consists of only one function, which returns `true` if the first element is in the viewport, and `false` otherwise.
 
-## $.plug ( String _alias_ , Function _code_ ) [alpha]
+## $.plug ( String _alias_ , Function _code_ [, Boolean _overwrite_ = false] ) [0.1]
 This static plugin is very much a work in progress. It basically allows one to add plugins to **bla.js** at any time:
 ```javascript
 $.plug("myAwesomePlugin",function(){
@@ -29,10 +29,10 @@ This static plugin was inspired by a [tutorial](https://davidwalsh.name/pubsub-j
 ### $.publish ( String _event_ [ , Object _data_ = {} ] )
 This function allows you to publish an app- (or page-)wide event. You can also specify data to be passed to every handler listening to said event.
 ```javascript
-$.publish("news",{title:"bla.js is awesome!"});
+$.publish("news","bla.js is awesome!");
 ```
 
-### $.subscribe ( String _event_ , Function _handler_ [ , Object _defaultData_ = {} [ , Any context = _root_ ] ] )
+### $.subscribe ( String _event_ , Function _handler_ [ , Object _defaultData_ = {} [ , Any context = _window_ ] ] )
 This function allows you attach a handler to an event. You can also specify default data to be passed to the handler, and a context in which it be called. It returns a numeric identifier for the handler.
 
 ### $.unsubscribe ( String _event_ [ , Array | Number _ids_ ] )
