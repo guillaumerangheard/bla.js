@@ -1,1 +1,0 @@
-$.viewport=function(t,n,i){function e(){return n.max(t.clientHeight,i.innerHeight)}function h(){return{width:i(),height:e()}}return h.width=i=function(){return n.max(t.clientWidth,i.innerWidth)},h.height=e,h}($.document,Math,window);
