@@ -144,8 +144,38 @@
 		// [0.2] this $.api.append ( Function builder )
 		//       -> Element builder ( Element parent , Number index )
 		// [0.2] this $.api.append ( String content )
+		// Requires: $.typeOf
 		append:function(a){
-			
+			if(this.length){
+				var i=-1,
+					l=this.length;
+				if($.isElement(a)){
+					l--;
+					while(++i<l){
+						this[i].appendChild(a.cloneNode(true));
+					}
+					this[l].appendChild(a);
+				}
+				else{
+					switch($.typeOf(a)){
+						case"Array":
+							while(++i<l){
+								this[i].appendChild($.build.apply(W,a));
+							}
+							break;
+						case"Function":
+							while(++i<l){
+								this[i].appendChild(a.call(this[i],i));
+							}
+							break;
+						case"String":
+							while(++i<l){
+								this[i].insertAdjacentHTML("beforeend",a);
+							}
+					}
+				}
+			}
+			return this;
 		},
 		
 		// [x.x] this $.api.appendTo ( Bla elements )
@@ -157,8 +187,11 @@
 		
 		// [x.x] Object $.api.attr ( Array keys )
 		// [x.x] this   $.api.attr ( Object pairs )
-		// [x.x] String $.api.attr ( String key )
-		// [x.x] this   $.api.attr ( String key , Any value )
+		// [0.2] String $.api.attr ( String key )
+		// [0.2] this   $.api.attr ( String key , Any value )
+		attr:function(a,b){
+			
+		},
 		
 		// [0.2] Bla  $.api.before ( )
 		// [0.2] this $.api.before ( Array builder )
@@ -171,6 +204,7 @@
 		},
 		
 		// [0.2] Object $.api.bRect ( )
+		// Requires: $.bRect
 		bRect:function(){
 			
 		},
@@ -184,7 +218,7 @@
 		// [x.x] this $.api.click ( )
 		// [0.2] this $.api.click ( Function handler )
 		click:function(h){
-			
+			return this.on("click",h);
 		},
 		
 		// [x.x] Object $.api.css ( Array keys )
@@ -204,39 +238,98 @@
 		},
 		
 		// [0.1] this $.api.each ( Function iterator [ , Boolean wrapped = false ] )
+		// Requires: $.identity
 		each:function(f,w){
-			
+			if(this.length){
+				var i=-1,
+					l=this.length;
+				w=w||$.identity;
+				while(++i<l){
+					if(false===f.call(w(this[i]),i)){
+						break;
+					}
+				}
+			}
+			return this;
 		},
 		
 		// [0.1] Bla $.api.filter ( Function test )
 		// [x.x] Bla $.api.filter ( Object test )
 		// [0.1] Bla $.api.filter ( String test )
+		// Requires: $.make.test
 		filter:function(t){
-			
+			var r=$();
+			if(this.length){
+				t=$.make.test(t);
+				var i=-1,
+					l=this.length;
+				while(++i<l){
+					if(t(this[i])){
+						r.push(this[i]);
+					}
+				}
+			}
+			return r;
 		},
 		
 		// [0.1] Bla $.api.find ( Function test )
 		// [x.x] Bla $.api.find ( Object test )
 		// [0.1] Bla $.api.find ( String test )
+		// Raquires: $.make.test
 		find:function(t){
-			
+			if(this.length){
+				t=$.make.test(t);
+				var i=-1,
+					l=this.length;
+				while(++i<l){
+					if(t(this[i])){
+						return $(this[i]);
+					}
+				}
+			}
+			return $();
 		},
 		
 		// [0.1] this $.api.fire ( String event [ , Any data ] )
 		fire:function(e,d){
-			
+			if(this.length){
+				var c=$.isDefined(d)?new CustomEvent(e,{detail:d}):new Event(e),
+					i=-1,
+					l=this.length;
+				while(++i<l){
+					this[i].dispatchEvent(c);
+				}
+			}
+			return this;
 		},
 		
 		// [0.1] Bla $.api.first ( [ Number count = 1 ] )
 		first:function(c){
-			
+			var r=$();
+			if(this.length){
+				if(c){
+					c=this.length<c?this.length:c;
+					var i=-1;
+					while(++i<c){
+						r.push(this[i]);
+					}
+				}
+				else{
+					r.push(this[0]);
+				}
+			}
+			return r;
 		},
 		
 		// [x.x] Boolean $.api.hasClass ( Array classes )
 		// [0.1] Boolean $.api.hasClass ( String class )
 		// [x.x] Boolean $.api.hasClass ( String classes )
 		hasClass:function(c){
-			
+			return this.length?
+				(this[0].classList?
+				 	this[0].classList.contains(c):
+				 	-1<this[0].className.indexOf(c)):
+				undefined;
 		},
 		
 		// [x.x] this $.api.hover ( Function inHandler [ , Function outHandler ] )
@@ -245,7 +338,17 @@
 		// [0.2] this   $.api.html ( String content )
 		// Requires: $.isString
 		html:function(c){
-			
+			if($.isString(c)){
+				if(this.length){
+					var i=-1,
+						l=this.length;
+					while(++i<l){
+						this[i].innerHTML=c;
+					}
+				}
+				return this;
+			}
+			return this.length?this[0].innerHTML:"";
 		},
 		
 		// [x.x] Boolean $.api.isHeading ( )
@@ -255,7 +358,6 @@
 		// [x.x] Boolean $.api.isH2 ( )
 		
 		// [x.x] Boolean $.api.isH3 ( )
-		
 		
 		// [x.x] Boolean $.api.isH4 ( )
 		
@@ -270,7 +372,17 @@
 		
 		// [x.x] this $.api.off ( String event [ , Function handler ] )
 		
-		// [x.x] this $.api.on ( String event , Function handler )
+		// [0.1] this $.api.on ( String event , Function handler [ , Any options ] )
+		on:function(e,h,o){
+			if(this.length){
+				var i=-1,
+					l=this.length:
+				while(++i<l){
+					this[i].addEventListener(e,h,o);
+				}
+			}
+			return this;
+		},
 		
 		// [0.1] this $.api.prepend ( Array builder )
 		// [x.x] this $.api.prepend ( Bla elements )
@@ -322,6 +434,9 @@
 		
 	};
 	
+	// [0.1] $.document
+	$.document=D.documentElement;
+	
 	// [0.1] Void $.each ( ArrayLike collection , Function iterator [ , Any context = this ] )
 	// Requires: $.isArrayLike
 	$.each=function(a,f,c){
@@ -339,9 +454,53 @@
 	
 	// [0.1] Void $.each.key ( Any object , Function iterator [ , Any context = this ] )
 	//       -> Any iterator ( String key , Any value , object )
+	// Requires: $.keys
+	$.each.key=function(o,f,c){
+		c=c||this;
+		var i=-1,
+			k=$.keys(o),
+			l=k.length;
+		while(++i<l){
+			if(false===f.call(c,k[i],o[k[i]],o)){
+				break;
+			}
+		}
+	};
 	
-	// [x.x] Void $.each.key ( Any object , Function iterator [ , Any context = this ] )
+	// [0.2] Void $.each.value ( Any object , Function iterator [ , Any context = this ] )
 	//       -> Any iterator ( Any value , String key , object )
+	// Requires: $.keys
+	$.each.value=function(o,f,c){
+		c=c||this;
+		var i=-1,
+			k=$.keys(o),
+			l=k.length;
+		while(++i<l){
+			if(false===f.call(c,o[k[i]],k[i],o)){
+				break;
+			}
+		}
+	};
+	
+	// [0.1] Object $.extend ( Object extended , Object extender [ , Boolean preserve = false ] )
+	// Requires: $.keys
+	$.extend=(function(){
+		var _s=function(k,v){
+				this[k]=v;
+			};
+		return function(a,b,p){
+			var r;
+			if(p){
+				r={};
+				$.each.key(a,_s,r);
+			}
+			else{
+				r=a;
+			}
+			$.each.key(b,_s,r);
+			return r;
+		};
+	})();
 	
 	// [0.1] Boolean $.isArray ( Any value )
 	// Requires: _S
@@ -353,6 +512,11 @@
 	// Requires: $.isNumber
 	$.isArrayLike=function(a){
 		return a?$.isNumber(a.length):false;
+	};
+	
+	// [0.2] Boolean $.isAudio ( Any value )
+	$.isAudio=function(a){
+		return a?"AUDIO"===a.tagName:false;
 	};
 	
 	// [x.x] Boolean $.isBoolean ( Any value )
@@ -458,6 +622,72 @@
 	$.make.test=function(t){
 		
 	};
+	
+	// [0.1] Function $.setter ( String alias )
+	// [0.1] Function $.setter ( String alias , Function setter )
+	// [0.1] Function $.setter ( String alias , String key )
+	$.setter=funtion(a,b){
+		
+	};
+	
+	// [0.1] String $.toCamel ( String value )
+	$.toCamel=(function(){
+		var _a=/-([a-z])/g,
+			_b=function(x,y){
+				return y.toUpperCase();
+			};
+		return function(a){
+			return (""+a).replace(_a,_b);
+		};
+	})();
+
+	// [0.1] String $.toKebab ( String value )
+	$.toKebab=(function(){
+		var _a=/([A-Z])/g,
+			_b=function(x,y){
+				return "-"+y.toLowerCase();
+			};
+		return function(a){
+			return (""+a).replace(_a,_b);
+		};
+	})();
+	
+	// [0.2] String $.typeOf ( Any value )
+	// Requires: _S
+	$.typeOf=function(a){
+		var b=_S(a);
+		return b.substring(8,b.length-1);
+	};
+	
+	$.version={
+		major:0,
+		minor:2
+	};
+	
+	// [0.2] Object $.viewport ( )
+	// [0.2] Number $.viewport.height ( )
+	// [0.2] Number $.viewport.width ( )
+	$.viewport=(function(){
+		var _h=function(){
+				var a=$.document.clientHeight,
+					b=W.innerHeight;
+				return a<b?b:a;
+			},
+			_w=function(){
+				var a=$.document.clientWidth,
+					b=W.innerWidth;
+				return a<b?b:a;
+			},
+			V=function(){
+				return {
+					width:_w(),
+					height:_h()
+				};
+			};
+		V.width=_w;
+		V.height=_h;
+		return V;
+	})();
 	
 	W.$=$;
 	
