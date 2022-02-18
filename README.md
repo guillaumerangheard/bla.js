@@ -41,9 +41,13 @@ $("#someId").myOtherPlugin(someData);
 // This would work.
 ```
 
- ## Static methods
+## Static methods and properties
 
-### .build ( String _alias_ [ , Object _attributes_ = {} [ , Variable _children_ ] ] )
+### Boolean $.all ( ArrayLike _collection_ , Function _test_ [ , Any _context_ = this ] )
+
+### Boolean $.any ( ArrayLike _collection_ , Function _test_ [ , Any _context_ = this ] )
+
+### Element $.build ( String _alias_ [ , Object _attributes_ = {} [ , Variable _children_ ] ] )
 `$.build` allows you to create HTML elements on the fly. The first argument has to be an "alias", that is either the name of a HTML tag (such as `a` for links, `p` for paragraphs, etc.) or a user-defined name (see **$.maker** below). The second argument is an object containing all your elements' attributes (whose names must be camel-cased). You can create aliases for attributes (see **$.getter** and **$.setter** below). The third argument is an array containing all your element's children, would you want to populate it.
 To create a simple link, with no explicit attributes and no children, just type:
 ```javascript
@@ -63,12 +67,66 @@ link
     .css("color","red");
 ```
 
+### Element $.document
+`$.document` is a shortcut to `document.documentElement`.
+
+### Void $.each ( ArrayLike _collection_ , Function _iterator_ [ , Any _context_ = this ] )
+
+### Void $.each.key ( Object _object_ , Function _iterator_ [ , Any _context_ = this ] )
+
+### Object $.extend ( Object _extended_ , Object _extender_ [ , Boolean _preserve_ = `false` ] )
+
+### _value_ $.identity ( Any _value_ )
+
+### Boolean $.is$ ( Any _value_ )
+
+### Boolean $.isArguments ( Any _value_ )
+
+### Boolean $.isArray ( Any _value_ )
+
+### Boolean $.isArrayLike ( Any _value_ )
+
+### Boolean $.isAudio ( Any _value_ )
+
+### Boolean $.isBoolean ( Any _value_ )
+
+### Boolean $.isCollection ( Any _value_ )
+
+### Boolean $.isDate ( Any _value_ )
+
+### Boolean $.isDefined ( Any _value_ )
+
+### Boolean $.isElement ( Any _value_ )
+
+### Boolean $.isError ( Any _value_ )
+
+### Boolean $.isFunction ( Any _value_ )
+
+### Boolean $.isNaN ( Any _value_ )
+
+### Boolean $.isNode ( Any _value_ )
+
+### Boolean $.isNull ( Any _value_ )
+
+### Boolean $.isNullish ( Any _value_ )
+
+### Boolean $.isNumber ( Any _value_ )
+
+### Boolean $.isObject ( Any _value_ )
+
+### Boolean $.isPlainObject ( Any _value_ )
+
+### Boolean $.isRegExp ( Any _value_ )
+
+### Boolean $.isString ( Any _value_ )
+
+### Boolean $.isTextNode ( Any _value_ )
+
+### Boolean $.isUndefined ( Any _value_ )
+
 ### .css.getter ( String _alias_ , Function | String _getter_ )
 
 ### .css.setter ( String _alias_ , Function | String _getter_ )
-
-### .document
-`$.document` is a shortcut to `document.documentElement`.
 
 ### .get ( Element element , String alias )
 
@@ -116,18 +174,44 @@ This function returns `true` if `value` is a `String`, and `false` otherwise.
 
 ### .isUndefined ( Any _value_ )
 
-### .make ( String _alias_ )
+### Element $.make ( String _alias_ )
 This function creates HTML elements.
 
-### .maker ( String _alias_ , Function | String _maker_ )
+### Function $.make.test ( Function | String _test_ ] )
+
+### Function $.maker ( String _alias_ [ , Function | String _maker_ ] )
 This function helps you define custom functions for creating HTML elements.
 
-### .ready ( Function _callback_ [ , Array _arguments_ = [] [ , Any _context_ = root ] ] )
+### Array $.map ( ArrayLike _value_ , Function _mapper_ [ , Any _context_ = `this` ] )
+
+### Void $.noop ( )
+
+### $ $.off ( String _event_ )
+
+### $ $.on ( String _event_ , Function _handler_ [ , Function | String _test_ ] )
+
+### Void $.ready ( Function _callback_ [ , Array _arguments_ = [] [ , Any _context_ = root ] ] )
 This function allows you to call a function when the DOM is ready. It's very simliar to jQuery's `$(document).ready(...)`, except it allows you to pass arguments and a context to your handler.
 
-### .set ( Element _element_, String _alias_, Variable _value_ )
+### Object $.scroll ( )
 
-### .setter ( String _alias_ , Function | String _setter_ )
+### $ $.scroll ( [ Number _x_ , ] Number _y_ ] )
+
+### $ | Number $.scroll.x ( [ Number _x_ ] )
+
+### $ | Number $.scroll.y ( [ Number _x_ ] )
+
+### Void $.set ( Element _element_, String _alias_, Any _value_ )
+
+### Function $.setter ( String _alias_ [ , Function | String _setter_ ] )
+
+### String $.toCamel ( String _value_ )
+
+### String $.toKebab ( String _value_ )
+
+### String $.typeOf ( Any _value_ )
+
+### Object $.version
 
 ## Instance methods
 
