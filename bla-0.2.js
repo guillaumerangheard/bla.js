@@ -719,12 +719,72 @@
 		return $;
 	};
 	
+	// [0.2] Object $.scroll ( )
+	// [0.2] $      $.scroll ( [ Number x , ] Number y )
+	// [0.2] Number $.scroll.x ( )
+	// [0.2] $      $.scroll.x ( Number x )
+	// [0.2] Number $.scroll.y ( )
+	// [0.2] $      $.scroll.y ( Number y )
+	$.scroll=(function(){
+		var _x=function(n){
+				if(arguments.length){
+					W.scrollTo(n,_y());
+					return $;
+				}
+				return W.pageXOffset||$.document.scrollLeft;
+			},
+			_y=function(n){
+				if(arguments.length){
+					W.scrollTo(_x(),n);
+					return $;
+				}
+				return W.pageYOffset||$.document.scrollTop;
+			},
+			S=function(a,b){
+				switch(arugments.length){
+					case 1:
+						return _y(a);
+					case 2:
+						W.scrollTo(a,b);
+						return $;
+					default:
+						return {
+							x:_x(),
+							y:_y()
+						};
+				}
+			};
+		S.x=_x;
+		S.y=_y;
+		return S;
+	})();
+	
+	// [0.1] Void $.set ( Element element , String alias , Any value )
+	$.set=function(e,k,v){
+		if($.set[k]){
+			$.set[k](e,v);
+		}
+		else if(e){
+			e[k]=v;
+		}
+	};
+	
 	// [0.1] Function $.setter ( String alias )
 	// [0.1] Function $.setter ( String alias , Function setter )
 	// [0.1] Function $.setter ( String alias , String key )
+	// Requires: $.isFunction , $.noop
 	$.setter=funtion(a,b){
-		
+		if(b){
+			$.set[a]=$.isFunction(b)?b:new Function("e,v","if(e){e."+b+"=v;}");
+		}
+		return $.set[a]||$.noop;
 	};
+	
+	// [x.x] $.set.class ( Element element , Array classes )
+	// [0.1] $.set.class ( Element element , String class )
+	$.setter("class","className");
+	
+	// [x.x] String $.str ( Any value [ , Object dictionary ] )
 	
 	// [0.1] String $.toCamel ( String value )
 	$.toCamel=(function(){
