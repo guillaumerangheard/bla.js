@@ -221,6 +221,24 @@
 			return this.on("click",h);
 		},
 		
+		// [0.2] Boolean $.api.contains ( Function test )
+		// [x.x] Boolean $.api.contains ( Object test )
+		// [0.2] Boolean $.api.contains ( String test )
+		// Requires: $.make.test
+		contains:function(t){
+			if(this.length){
+				t=$.make.test(t);
+				var i=-1,
+					l=this.length;
+				while(++i<l){
+					if(t(this[i])){
+						return true;
+					}
+				}
+			}
+			return false;
+		},
+		
 		// [x.x] Object $.api.css ( Array keys )
 		// [x.x] this   $.api.css ( Object pairs )
 		// [0.2] String $.api.css ( String key )
@@ -291,6 +309,7 @@
 		},
 		
 		// [0.1] this $.api.fire ( String event [ , Any data ] )
+		// Requires: $.isDefined
 		fire:function(e,d){
 			if(this.length){
 				var c=$.isDefined(d)?new CustomEvent(e,{detail:d}):new Event(e),
@@ -304,6 +323,7 @@
 		},
 		
 		// [0.1] Bla $.api.first ( [ Number count = 1 ] )
+		// Requires: $.api.push
 		first:function(c){
 			var r=$();
 			if(this.length){
@@ -404,6 +424,7 @@
 		
 		// [0.1] this $.api.push ( ArrayLike elements )
 		// [0.1] this $.api.push ( Element element )
+		// Requires: $.each , $.isArrayLike , $.isElement
 		push:(function(){
 			var _p=function(a){
 					if($.isElement(a)){
@@ -483,7 +504,7 @@
 	};
 	
 	// [0.1] Object $.extend ( Object extended , Object extender [ , Boolean preserve = false ] )
-	// Requires: $.keys
+	// Requires: $.each.key
 	$.extend=(function(){
 		var _s=function(k,v){
 				this[k]=v;
@@ -619,8 +640,83 @@
 	// [0.2] Function $.make.test ( Function test )
 	// [x.x] Function $.make.test ( Object test )
 	// [0.2] Function $.make.test ( String test )
+	// Requires: $.get , $.typeOf
 	$.make.test=function(t){
-		
+		switch($.typeOf(t)){
+			case"Function":
+				return t;
+			/*
+			case"Object":
+				
+			*/
+			case"String":
+				switch(t.charAt(0)){
+					case"#":
+						return new Function("e","return \""+t.substring(1)+"\"===e.id;");
+					case".":
+						t=t.substring(1);
+						return new Function("e","return e.classList?e.classList.contains(\""+t+"\"):-1<(e.className||\"\").indexOf(\""+t+"\");");
+					case"<":
+						return new Function("e","return \""+t.substring(1,t.length-1).toUpperCase()+"\"===e.tagName;");
+					default:
+						return new Function("e","return $.get(e,\""+t+"\");");
+				}
+		}
+	};
+	
+	// [0.1] Function $.maker ( String alias )
+	// [0.1] Function $.maker ( String alias, Function maker )
+	// [0.1] Function $.maker ( String alias, String tagName )
+	// Requires: $.isFunction , $.noop
+	$.maker=fnuction(a,b){
+		if(b){
+			$.make[a]=$.isFunction(b)?b:new Function("return document.createElement(\""+b+"\");");
+		}
+		return $.make[a]||$.noop;
+	};
+	
+	// [0.2] Array $.map ( ArrayLike collection , Function mapper [ , ANy context = this ] )
+	// Requires: $.isArrayLike
+	$.map=function(a,f,c){
+		var r=[];
+		if($.isArrayLike(a)){
+			c=c||this;
+			var i=-1,
+				l=a.length;
+			while(++i<l){
+				r.push(f.call(c,a[i],i,a));
+			}
+		}
+		return r;
+	};
+	
+	// [0.1] Void $.noop ( )
+	$.noop=function(){};
+	
+	// [0.2] Void $.off ( String event )
+	// Requires: $.on
+	$.off=function(e){
+		if($.on[e]){
+			delete $.on[e];
+		}
+	};
+	
+	// [0.2] $ $.on ( String event , Function handler )
+	// [0.2] $ $.on ( String event , Function handler , Function test )
+	// [x.x] $ $.on ( String event , Function handler , Object test )
+	// [0.2] $ $.on ( String event , Function handler , String test )
+	// Requires: _H , $.make.test
+	$.on=function(e,h,t){
+		if(!$.on[e]){
+			$.on[e]=[];
+			W.addEventListener(e,_H);
+		}
+		var r={callback:h};
+		if(t){
+			r.test=$.make.test(t);
+		}
+		$.on[e].push(r);
+		return $;
 	};
 	
 	// [0.1] Function $.setter ( String alias )
