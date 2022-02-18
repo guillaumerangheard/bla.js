@@ -1,20 +1,38 @@
 (function(){
 	
-	var _E={};
+	var _T={};
 	
-	// [0.1] Void $.publish ( String topic [ , Object data = {} ] )
-	$.publish=function(e,d){
-		if(_E[e]){
-			if(_E[e].length){
+	// [0.1] $ $.publish ( String topic [ , Object data = {} ] )
+	$.publish=function(t,d){
+		if(_T[t]){
+			if(_T[t].length){
 				d=d||{};
-				var E=_e[e],
-					i=-1,
-					l=E.length;
+				var i=-1,
+					l=_T[t].length,
+					u;
 				while(++i<l){
-					E[i].f.call(E[i].c,d);
+					u=_T[t];
+					u.f.call(u.c,d);
 				}
 			}
 		}
+		return $;
+	}
+	
+	// [0.1] Object $.subscribe ( String topic , Function callback [ , Any context = window ] )
+	$.subscribe=function(t,f,c){
+		if(!_T[t]){
+			_T[t]=[];
+		}
+		var index=_T[t].push({
+				f:f,
+				c:c||W
+			})-1;
+		return {
+			unsubscribe:function(){
+				delete _T[t][index];
+			}
+		};
 	};
 	
 })();
