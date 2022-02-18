@@ -190,6 +190,9 @@ This function helps you define custom functions for creating HTML elements.
 
 ### $ $.on ( String _event_ , Function _handler_ [ , Function | String _test_ ] )
 
+### $ $.plug ( String _alias_ , Function _plugin_ [ , Boolean _overwrite_ = `false` ] )
+This function allows one to safely add an _instance_ plugin to **bla.js**.
+
 ### Void $.ready ( Function _callback_ [ , Array _arguments_ = [] [ , Any _context_ = root ] ] )
 This function allows you to call a function when the DOM is ready. It's very simliar to jQuery's `$(document).ready(...)`, except it allows you to pass arguments and a context to your handler.
 
