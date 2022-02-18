@@ -185,7 +185,7 @@
 			
 		},
 		
-		// [x.x] Object $.api.attr ( Array keys )
+		// [0.2] Object $.api.attr ( Array keys )
 		// [x.x] this   $.api.attr ( Object pairs )
 		// [0.2] String $.api.attr ( String key )
 		// [0.2] this   $.api.attr ( String key , Any value )
@@ -523,33 +523,62 @@
 		};
 	})();
 	
+	// [0.1] value $.identity ( Any value )
+	$.identity=function(a){
+		return a;
+	};
+	
+	// [0.1] Boolean $.is$ ( Any value )
+	$.is$=function(a){
+		return a instanceof $;
+	};
+	
+	// [0.2] Boolean $.isArguments ( Any value )
+	// Borrowed from is.js 0.9.0
+	// Requires: _S
+	$.isArguments=function(a){
+		return "[object Arguments]"===_S(a)||(a!=null&&"object"===typeof a&&"callee"in a);
+	};
+	
 	// [0.1] Boolean $.isArray ( Any value )
+	// Borrowed from is.js 0.9.0
 	// Requires: _S
 	$.isArray=function(a){
 		return "[object Array]"===_S(a);
 	};
 	
 	// [0.1] Boolean $.isArrayLike ( Any value )
-	// Requires: $.isNumber
+	// Requires: $.isNumber , $.isObject
 	$.isArrayLike=function(a){
-		return a?$.isNumber(a.length):false;
+		return $.isObject(a)?$.isNumber(a.length):false;
 	};
 	
 	// [0.2] Boolean $.isAudio ( Any value )
+	// Requires: $.isElement
 	$.isAudio=function(a){
-		return a?"AUDIO"===a.tagName:false;
+		return $.isElement(a)?"AUDIO"===a.tagName:false;
 	};
 	
-	// [x.x] Boolean $.isBoolean ( Any value )
+	// [0.2] Boolean $.isBoolean ( Any value )
+	// Borrowed from is.js 0.9.0
+	// Requires: _S
+	$.isBoolean=function(a){
+		return true===a||false===a||"[object Boolean]"===_S(a);
+	};
 	
 	// [0.2] Boolean $.isCollection ( Any value )
 	// Requires: _S
 	$.isCollection=function(a){
-		var s=_S(a);
-		return "[object HTMLCollection]"===b||"[object NodeList]"===b||a instanceof $;
+		var t=_S(a);
+		return "[object HTMLCollection]"===t||"[object NodeList]"===t||a instanceof $;
 	};
 	
-	// [x.x] Boolean $.isDate ( Any value )
+	// [0.2] Boolean $.isDate ( Any value )
+	// Borrowed from is.js 0.9.0
+	// Requires: _S
+	$.isDate=function(a){
+		return "[object Date]"===_S(a);
+	};
 	
 	// [0.1] Boolean $.isDefined ( Any value )
 	// Requires: $.isUndefined
@@ -562,6 +591,13 @@
 		return a?1===a.nodeType:false;
 	};
 	
+	// [0.2] Boolean $.isError ( Any value )
+	// Borrowed from is.js 0.9.0
+	// Requires: _S
+	$.isError=function(a){
+		return"[object Error]"===_S(a);
+	};
+	
 	// [x.x] Boolean $.isFalsey ( Any value )
 	
 	// [0.2] Boolean $.isFragment ( Any value )
@@ -570,17 +606,24 @@
 	};
 	
 	// [0.1] Boolean $.isFunction (Any value )
+	// Borrowed from is.js 0.9.0
 	// Requires: _S
 	$.isFunction=function(a){
-		return "[object Function]"===_S(a);
+		return "[object Function]"===_S(a)||"function"===typeof a;
 	};
 	
 	// [0.1] Boolean $.isNaN ( Any value )
-	$.isNaN=function(a){
+	// Partly borrowed from is.js 0.9.0
+	$.isNaN=Number.isNaN||function(a){
 		return a!==a;
 	};
 	
-	// [x.x] Boolean $.isNode ( Any value )
+	// [0.2] Boolean $.isNode ( Any value )
+	// Borrowed from is.js 0.9.0
+	// Requires: $.isObject
+	$.isNode=function(a){
+        return $.isObject(a)&&0<a.nodeType;
+    };
 	
 	// [x.x] Boolean $.isNull ( Any value )
 	
@@ -588,19 +631,28 @@
 	
 	// [0.1] Boolean $.isNumber ( Any value )
 	// Requires: _S
-	$.isNumber=function(a){
-		return "[objet Number]"===_S(a);
+	$.isNumber=Number.isFinite||function(a){
+		return "[objet Number]"===_S(a)?a===a:false;
 	};
 	
 	// [0.1] Boolean $.isObject ( Any value )
+	// Borrowed from is.js 0.9.0
 	$.isObject=function(a){
 		return O(a)===a;
 	};
 	
 	// [0.2] Boolean $.isPlainObject ( Any value )
+	// API borrowed from jQuery, implementation borrowed from is.js 0.9.0
 	// Requires: _S
 	$.isPlainObject=function(a){
 		return "[object Object]"===_S(a);
+	};
+	
+	// [0.2] Boolean $.isRegExp ( Any value )
+	// Borrowed from is.js 0.9.0
+	// Requires: _S
+	$.isRegExp=function(a){
+		return"[object RegExp"===_S(a);
 	};
 	
 	// [0.1] Boolean $.isString ( Any value )
