@@ -771,6 +771,16 @@
 		return $;
 	};
 	
+	// [0.2] $ $.plug ( String alias , Function plugin [ , Boolean overwrite = false ] )
+	$.plug=function(a,p,o){
+		if($.isString(a)&&$.isFunction(p)){
+			if(!$.prototype[a]||o){
+				$.prototype[a]=p;
+			}
+		}
+		return $;
+	};
+	
 	// [0.2] Object $.scroll ( )
 	// [0.2] $      $.scroll ( [ Number x , ] Number y )
 	// [0.2] Number $.scroll.x ( )
