@@ -43,9 +43,17 @@ $("#someId").myOtherPlugin(someData);
 
 ## Static methods and properties
 
-### Boolean $.all ( ArrayLike _collection_ , Function _test_ [ , Any _context_ = this ] )
+### Boolean $.all ( ArrayLike _collection_ , Function _test_ [ , Any _context_ = `this` ] )
+`$.all` return `true` if all items in `collection` pass `test`, and `false` otherwise.
 
-### Boolean $.any ( ArrayLike _collection_ , Function _test_ [ , Any _context_ = this ] )
+### Boolean $.any.right ( ArrayLike _collection_ , Function _test_ [ , Any _context_ = `this` ] )
+`$.all.right` works the same way as `$.all`, except it parses `collection` backwards.
+
+### Boolean $.any ( ArrayLike _collection_ , Function _test_ [ , Any _context_ = `this` ] )
+`$.any` return `true` if any item in `collection` passes `test`, and `false` otherwise.
+
+### Boolean $.any.right ( ArrayLike _collection_ , Function _test_ [ , Any _context_ = `this` ] )
+`$.any.right` works the same way as `$.any`, except it parses `collection` backwards.
 
 ### Element $.build ( String _alias_ [ , Object _attributes_ = {} [ , Variable _children_ ] ] )
 `$.build` allows you to create HTML elements on the fly. The first argument has to be an "alias", that is either the name of a HTML tag (such as `a` for links, `p` for paragraphs, etc.) or a user-defined name (see **$.maker** below). The second argument is an object containing all your elements' attributes (whose names must be camel-cased). You can create aliases for attributes (see **$.getter** and **$.setter** below). The third argument is an array containing all your element's children, would you want to populate it.
@@ -57,14 +65,10 @@ To create a link that actually points somewhere, type:
 ```javascript
 var link = $.build("a",{href:"https://example.com"});
 ```
-`$.build` returns your element wrapped inside a `$` instance, so you can do things like this:
+
+To create a paragraph, just type:
 ```javascript
-var link = $.build("a",{href:"https://example.com"}).appendTo(someOtherElement);
-// You can then do whatever you want with your newly created element,
-// such as setting its attributes or changing its appearance via CSS:
-link
-    .attr("target","_blank")
-    .css("color","red");
+var p = $.build("p",{},"Hello, world.");
 ```
 
 ### Element $.document
