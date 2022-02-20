@@ -133,9 +133,51 @@
 		// [x.x] this $.api.after ( Collection elements )
 		// [0.2] this $.api.after ( Element element )
 		// [0.2] this $.api.after ( String content )
-		after:function(a){
-			
-		},
+		after:(function(){
+			var _a=function(a,b){
+					var c=a.parentNode,
+						d=a.nextSibling;
+					if(c){
+						if(d){
+							c.insertBefore(b,d);
+						}
+						else{
+							c.appendChild(b);
+						}
+					}
+				};
+			return function(a){
+				if(this.length){
+					if(a){
+						var i=-1,
+							l=this.length;
+						if($.isElement(a)){
+							l--;
+							while(++i<l){
+								_a(this[i],a.cloneNode(true));
+							}
+							_a(this[l],a);
+						}
+						else{
+							switch($.typeOf(a)){
+								case"Array":
+									while(++i<l){
+										_a(this[i],$.build.apply(W,a));
+									}
+									break;
+								case"String":
+									while(++i<l){
+										this[i].insertAdjacentHTML("afterend",a);
+									}
+							}
+						}
+						return this;
+					}
+					return $(this[0].nextSibling);
+				}
+				return $();
+			};
+		})(),
 		
 		// [0.1] this $.api.append ( Array builder )
 		// [x.x] this $.api.append ( Bla elements )
@@ -199,9 +241,43 @@
 		// [x.x] this $.api.before ( Collection elements )
 		// [0.2] this $.api.before ( Element element )
 		// [0.2] this $.api.before ( String content )
-		before:function(a){
-			
-		},
+		before:(function(){
+			var _b=function(a,b){
+					var c=a.parentNode;
+					if(c){
+						c.insertBefore(b,a)
+					}
+				};
+			return function(a){
+				if(this.length){
+					if(a){
+						var i=-1,
+							l=this.length;
+						if($.isElement(a)){
+							l--;
+							while(++i<l){
+								_b(this[i],a.cloneNode(true));
+							}
+							_b(this[l],a);
+						}
+						else{
+							switch($.typeOf(a)){
+								case"Array":
+									while(++i<l){
+										_b(this[i],$.build?apply(W,a));
+									}
+									break;
+								case"String":
+									while(++i<l){
+										this[i].insertAdjacentHTML("beforebegin",a);
+									}
+							}
+						}
+					}
+				}
+				return $();
+			};
+		})(),
 		
 		// [0.2] Object $.api.bRect ( )
 		// Requires: $.bRect
@@ -842,9 +918,11 @@
 		return $.set[a]||$.noop;
 	};
 	
-	// [x.x] $.set.class ( Element element , Array classes )
-	// [0.1] $.set.class ( Element element , String class )
-	$.setter("class","className");
+	// [x.x] Void $.set.class ( Element element , Array classes )
+	// [0.1] Void $.set.class ( Element element , String class )
+	$.setter("class",function(e,v){
+		e.className=$.isArray(v)?v.join(" "):v;
+	});
 	
 	// [x.x] String $.str ( Any value [ , Object dictionary ] )
 	
