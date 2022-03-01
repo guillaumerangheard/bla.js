@@ -1,10 +1,10 @@
 # bla.js plugins
 I created a bunch of little plugins while I was writing [bla.js](https://github.com/guillaumerangheard/blajs).
 
-## $.aspectRatio ( ) [alpha]
+## $.aspectRatio ( ) [0.1]
 This static plugin was inspired by [verge](https://github.com/ryanve/verge), by [Ryan Van Etten](https://github.com/ryanve). It returns the viewport's aspect ratio in the form of a number, and requires **$.viewport** 0.1+ to work. Not to be confused with **$.api.aspectRatio**, which returns a given _element_'s aspect ratio.
 
-## $.api.aspectRatio ( ) [alpha]
+## $.api.aspectRatio ( ) [0.1]
 This instance plugin was inspired by [verge](https://github.com/ryanve/verge), by [Ryan Van Etten](https://github.com/ryanve). It returns the first element's aspect ratio in the form of a number, and requires **$.api.bRect** 0.1+ to work. Not to be confused with **$.aspectRatio**, which returns the _viewport_'s aspect ratio.
 
 ## $.api.bRect ( ) [alpha]
@@ -14,7 +14,7 @@ This one-line, zero-dependency instance plugin is basically a wrapper around [`e
 This instance plugin was inspired by [verge](https://github.com/ryanve/verge), by [Ryan Van Etten](https://github.com/ryanve). It requires **bRect** 0.1+ and **viewport** 0.1+ to work, and consists of only one function, which returns `true` if the first element is in the viewport, and `false` otherwise.
 
 ## $.plug ( String _alias_ , Function _code_ [, Boolean _overwrite_ = false] ) [0.1]
-This static plugin is very much a work in progress. It basically allows one to add plugins to **bla.js** at any time:
+This static plugin basically allows one to add plugins to **bla.js** at any time:
 ```javascript
 $.plug("myAwesomePlugin",function(){
 	// My awesome code
@@ -23,10 +23,10 @@ $.plug("myAwesomePlugin",function(){
 });
 ```
 
-## $.pubsub [alpha]
+## $.pubsub [0.1]
 This static plugin was inspired by a [tutorial](https://davidwalsh.name/pubsub-javascript) by [David Walsh](https://davidwalsh.name/). As its name (somewhat) implies, it implements the [publish-subscribe pattern](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern), and consists of three functions.
 
-### $.publish ( String _event_ [ , Object _data_ = {} ] )
+### $.publish ( String _event_ [ , Any _data_ ] )
 This function allows you to publish an app- (or page-)wide event. You can also specify data to be passed to every handler listening to said event.
 ```javascript
 $.publish("news","bla.js is awesome!");
