@@ -38,25 +38,16 @@ This function allows you attach a handler to an event. You can also specify defa
 ### $.unsubscribe ( String _event_ [ , Array | Number _ids_ ] )
 By calling `unsubscribe` with only an event's name, one can cancel all handlers attached to it. By specifying an id (or array of id's), one can only cancel the selected handlers.
 
-## $.Template [alpha]
-This static plugin will add client-side templating to **bla.js**, and is very much a work in progress. It was inspired by [EJS](https://ejs.co/) and [Krasimir Tsonev](https://krasimirtsonev.com/)'s [Javascript template engine in just 20 lines](https://krasimirtsonev.com/blog/article/Javascript-template-engine-in-just-20-line). It exposes a `$.Template` factory function (i.e. no need to use `new`).
+## $.Template [0.1]
+This static plugin adds client-side templating to **bla.js**, and is very much a work in progress. It was inspired by [EJS](https://ejs.co/) and [Krasimir Tsonev](https://krasimirtsonev.com/)'s [Javascript template engine in just 20 lines](https://krasimirtsonev.com/blog/article/Javascript-template-engine-in-just-20-line). It exposes a `$.Template` factory function (i.e. no need to use `new`).
 
 ### $.Template ( String _source_ )
 This functions creates an instance of `$.Template`, attributing it a given `source` (i.e. some string to turn into a template), and compiling said `source` into a function (see **$.Template.prototype.render** below).
 ```javascript
 var t = $.Template("Hello, <?this.place?>.");
 ```
-The same result can be achieved by doing so:
-```javascript
-var t = $.Template();
-t.source="Hello, <?this.place?>.";
-t.compile();
-```
 
-### $.Template.prototype.compile ( )
-Compiles the `$.Template`'s current source, returing `true` if the compiling process succeeded, and `false` otherwise. If so, you can call `$.Template.prototype.log` to check what went wrong.
-
-### $.Template.prototype.log ( )
+### $.Template.compile ( String _source_ )
 
 ### $.Template.prototype.render ( Object _data_ )
 This function does the actual rendering of your template. It returns a string which you can then inject into the DOM.
@@ -74,10 +65,7 @@ $(someElement).html(template.render(data));
 // -> "Hello, World. My name is Guillaume Rangheard."
 ```
 
-### $.Template.prototype.source
-Sets the source for the `$.Template`. When changing the latter's source, one needs to recompile it using `$.Template.prototype.compile`.
-
-## $.viewport [v0.1.0]
+## $.viewport [0.1]
 This static plugin was inspired by [verge](https://github.com/ryanve/verge), by [Ryan Van Etten](https://github.com/ryanve). It has no dependencies, and consists of three functions:
 
 ### $.viewport ( )
