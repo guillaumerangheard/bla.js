@@ -1,13 +1,12 @@
 # bla.js
 
-**bla.js** is a compact front-end javascript library for common tasks, with jQuery-like API.
-Its works on IE9+ and modern browsers, as it uses (a version of) <a target="_blank" href="https://github.com/guillaumerangheard/Qjs">Q</a> as its selector engine.
+**bla.js** is a compact front-end javascript library for common tasks, with a jQuery-like API.
+Its works on IE9+ and modern browsers.
 
-## Constructor
-$ ( Collection | Element | String [ , Element | String ] )
+## $ ( [ String _selector_ [ , Element _context_ = document | String _selector_ ] ] )
 
 ## Writing plugins
-**bla.js** is very easy to write plugins for, so one can make it do just what she wants to do. There are two types of plugins one can write: **static plugins** and **instance plugins**.
+**bla.js** is very easy to write plugins for. There are two types of plugins one can write: **static plugins** and **instance plugins**.
 
 ## Static plugins
 A static plugin is one that adds functionalities to `$`, but not to its instances. To create one, just add a method to `$`, like so:
@@ -23,7 +22,7 @@ $.myPlugin(someData);
 ```
 
 ### Instance plugins
-An instance plugin is, as the name implies, one that adds functionalities to all instances of `$`, that is to `$.prototype`. To create one, one only needs to attach her code to the `$.api` object, like so:
+An instance plugin is, as the name implies, one that adds functionalities to all instances of `$`, that is to `$.prototype`. To create one, one only needs to attach their code to the `$.api` object, like so:
 ```javascript
 $.api.myOtherPlugin = function(){
     // Do things.
@@ -33,7 +32,7 @@ $.api.myOtherPlugin = function(){
     return this;
 };
 ```
-Please note that instance plugins must be declare _before_ your first call to `$()`. Instance plugins can only be called from an instance of `$`:
+Please note that instance plugins must be declared _before_ your first call to `$()`. Instance plugins can only be called from an instance of `$`:
 ```javascript
 $.myOtherPlugin(someData);
 // This would lead to an error.
@@ -41,21 +40,23 @@ $("#someId").myOtherPlugin(someData);
 // This would work.
 ```
 
+### Instance plugins (alternate method)
+Since **bla** 0.2, one can also use the `$.plug` function.
+```javascript
+$.plug("myOtherPlugin",function(){
+    // Your awesome code.
+});
+```
+
 ## Static methods and properties
 
-### Boolean $.all ( ArrayLike _collection_ , Function _test_ [ , Any _context_ = `this` ] )
+### [0.2] .all ( ArrayLike _collection_ , Function _test_ [ , Any _context_ = `this` ] )
 `$.all` return `true` if all items in `collection` pass `test`, and `false` otherwise.
 
-### Boolean $.any.right ( ArrayLike _collection_ , Function _test_ [ , Any _context_ = `this` ] )
-`$.all.right` works the same way as `$.all`, except it parses `collection` backwards.
-
-### Boolean $.any ( ArrayLike _collection_ , Function _test_ [ , Any _context_ = `this` ] )
+### [0.2] .any ( ArrayLike _collection_ , Function _test_ [ , Any _context_ = `this` ] )
 `$.any` return `true` if any item in `collection` passes `test`, and `false` otherwise.
 
-### Boolean $.any.right ( ArrayLike _collection_ , Function _test_ [ , Any _context_ = `this` ] )
-`$.any.right` works the same way as `$.any`, except it parses `collection` backwards.
-
-### Element $.build ( String _alias_ [ , Object _attributes_ = {} [ , Variable _children_ ] ] )
+### [0.1] .build ( String _alias_ [ , Object _attributes_ = {} [ , Variable _children_ ] ] )
 `$.build` allows you to create HTML elements on the fly. The first argument has to be an "alias", that is either the name of a HTML tag (such as `a` for links, `p` for paragraphs, etc.) or a user-defined name (see **$.maker** below). The second argument is an object containing all your elements' attributes (whose names must be camel-cased). You can create aliases for attributes (see **$.getter** and **$.setter** below). The third argument is an array containing all your element's children, would you want to populate it.
 To create a simple link, with no explicit attributes and no children, just type:
 ```javascript
@@ -71,171 +72,144 @@ To create a paragraph, just type:
 var p = $.build("p",{},"Hello, world.");
 ```
 
-### Element $.document
+### [0.2] .css.get ( Element _element_ , String _alias_ )
+
+### [0.2] .css.getter ( String _alias_ [ , Function _getter_ | String _property_ ] )
+
+### [0.2] .css.set ( Element _element_ , String _alias_ , Any _value_ )
+
+### [0.2] .css.setter ( String _alias_ [ , Function _setter_ | String _property_ ] )
+
+### [0.2] .decode ( String _value_ [ , String _code_ = `uri` ] )
+
+### [0.2] .decoder ( String _alias_ [ , Function _decoder_ ] )
+
+### [0.1] .document
 `$.document` is a shortcut to `document.documentElement`.
 
-### Void $.each ( ArrayLike _collection_ , Function _iterator_ [ , Any _context_ = this ] )
+### [0.1] .each ( ArrayLike _collection_ , Function _iterator_ [ , Any _context_ = `this` ] )
 
-### Void $.each.key ( Object _object_ , Function _iterator_ [ , Any _context_ = this ] )
+### [0.1] .each.key ( Object _object_ , Function _iterator_ [ , Any _context_ = `this` ] )
 
-### Object $.extend ( Object _extended_ , Object _extender_ [ , Boolean _preserve_ = `false` ] )
+### [0.2] .encode ( String _value_ [ , String _code_ = `uri` ] )
 
-### _value_ $.identity ( Any _value_ )
+### [0.2] .encoder ( String _alias_ [ , Function _encoder_ ] )
 
-### Boolean $.is$ ( Any _value_ )
+### [0.1] .extend ( Object _extended_ , Object _extender_ [ , Boolean _preserve_ = `false` ] )
 
-### Boolean $.isArguments ( Any _value_ )
+### [0.2] .filter ( ArrayLike _collection_ , Function _test_ [ , Any _context_ = `this` ] )
 
-### Boolean $.isArray ( Any _value_ )
+### [0.2] .fire ( String _event_ [ , Any _data_ ] )
 
-### Boolean $.isArrayLike ( Any _value_ )
-
-### Boolean $.isAudio ( Any _value_ )
-
-### Boolean $.isBoolean ( Any _value_ )
-
-### Boolean $.isCollection ( Any _value_ )
-
-### Boolean $.isDate ( Any _value_ )
-
-### Boolean $.isDefined ( Any _value_ )
-
-### Boolean $.isElement ( Any _value_ )
-
-### Boolean $.isError ( Any _value_ )
-
-### Boolean $.isFunction ( Any _value_ )
-
-### Boolean $.isNaN ( Any _value_ )
-
-### Boolean $.isNode ( Any _value_ )
-
-### Boolean $.isNull ( Any _value_ )
-
-### Boolean $.isNullish ( Any _value_ )
-
-### Boolean $.isNumber ( Any _value_ )
-
-### Boolean $.isObject ( Any _value_ )
-
-### Boolean $.isPlainObject ( Any _value_ )
-
-### Boolean $.isRegExp ( Any _value_ )
-
-### Boolean $.isString ( Any _value_ )
-
-### Boolean $.isTextNode ( Any _value_ )
-
-### Boolean $.isUndefined ( Any _value_ )
-
-### .css.getter ( String _alias_ , Function | String _getter_ )
-
-### .css.setter ( String _alias_ , Function | String _getter_ )
-
-### .get ( Element element , String alias )
-
-### .getter ( String _alias_ , Function | String _getter_ )
-
-### .head
+### [0.1] .head
 `$.head` is a shortcut to your document's `<head>`.
 
-### .isArray ( Any _value_ )
-This function returns `true` if `value` is an `Array`, and `false` otherwise.
+### [0.1] .identity ( Any _value_ )
 
-### .isArrayLike ( Any _value_ )
+### [0.1] .is$ ( Any _value_ )
 
-### .isBoolean ( Any _value_ )
-This function returns `true` if `value` is a `Boolean`, and `false` otherwise.
+### [0.3] .isArguments ( Any _value_ )
 
-### .isDate ( Any _value_ )
-This function returns `true` if `value` is a `Date`, and `false` otherwise.
+### [0.1] .isArray ( Any _value_ )
 
-### .isDefined ( Any _value_ )
+### [0.1] .isArrayLike ( Any _value_ )
 
-### .isElement ( Any _value_ )
+### [0.2] .isBoolean ( Any _value_ )
 
-### .isFalsey ( Any _value_ )
+### [0.2] .isCollection ( Any _value_ )
 
-### .isNaN ( Any _value_ )
-This function returns `true` if `value` equals `NaN`, and `false` otherwise.
+### [0.3] .isDate ( Any _value_ )
 
-### .isNode ( Any _value_ )
+### [0.1] .isDefined ( Any _value_ )
 
-### .isNull ( Any _value_ )
+### [0.1] .isElement ( Any _value_ )
 
-### .isNumber ( Any _value_ )
-This function returns `true` if `value` is a `Number`, and `false` otherwise.
+### [0.3] .isError ( Any _value_ )
 
-### .isObject ( Any _value_ )
+### [0.2] .isFalsey ( Any _value_ )
 
-### .isRegExp ( Any _value_ )
-This function returns `true` if `value` is a `RegExp`, and `false` otherwise.
+### [0.2] .isFragment ( Any _value_ )
 
-### .isString ( Any _value_ )
-This function returns `true` if `value` is a `String`, and `false` otherwise.
+### [0.2] .isFunction ( Any _value_ )
 
-### .isTruthy ( Any _value_ )
+### [0.1] .isNaN ( Any _value_ )
 
-### .isUndefined ( Any _value_ )
+### [0.3] .isNode ( Any _value_ )
 
-### Element $.make ( String _alias_ )
+### [0.3] .isNull ( Any _value_ )
+
+### [0.3] .isNullish ( Any _value_ )
+
+### [0.1] .isNumber ( Any _value_ )
+
+### [0.1] .isObject ( Any _value_ )
+
+### [0.2] .isPlainObject ( Any _value_ )
+
+### [0.3] .isRegExp ( Any _value_ )
+
+### [0.1] .isString ( Any _value_ )
+
+### [0.2] .isTextNode ( Any _value_ )
+
+### [0.2] .isTruthy ( Any _value_ )
+
+### [0.1] .isUndefined ( Any _value_ )
+
+### [0.1] .keys ( Any _value_ )
+
+### [0.1] .make ( String _alias_ )
 This function creates HTML elements.
 
-### Function $.make.test ( Function | String _test_ ] )
+### [0.2] .make.test ( Function | String _test_ )
 
-### Function $.maker ( String _alias_ [ , Function | String _maker_ ] )
+### [0.1] .maker ( String _alias_ [ , Function | String _maker_ ] )
 This function helps you define custom functions for creating HTML elements.
 
-### Array $.map ( ArrayLike _value_ , Function _mapper_ [ , Any _context_ = `this` ] )
+### [0.2] .map ( ArrayLike _value_ , Function _mapper_ [ , Any _context_ = `this` ] )
 
-### Void $.noop ( )
+### [0.3] .none ( ArrayLike _collection_ , Function _test_ | , Any _context_ = `this`] )
 
-### $ $.off ( String _event_ )
+### [0.1] .noop ( )
 
-### $ $.on ( String _event_ , Function _handler_ [ , Function | String _test_ ] )
+### [0.2] .obj ( )
 
-### $ $.plug ( String _alias_ , Function _plugin_ [ , Boolean _overwrite_ = `false` ] )
+### [0.1] .off ( String _event_ )
+
+### [0.1] .on ( String _event_ , Function _handler_ [ , Function | String _test_ ] )
+
+### [0.1] .plug ( String _alias_ , Function _plugin_ [ , Boolean _overwrite_ = `false` ] )
 This function allows one to safely add an _instance_ plugin to **bla.js**.
 
-### Void $.ready ( Function _callback_ [ , Array _arguments_ = [] [ , Any _context_ = root ] ] )
+### [0.2] .ready ( Function _callback_ )
 This function allows you to call a function when the DOM is ready. It's very simliar to jQuery's `$(document).ready(...)`, except it allows you to pass arguments and a context to your handler.
 
-### Object $.scroll ( )
+### [0.2] .reduce ( ArrayLike _collection_ , Any _baseValue_ , Function _iterator_ [ , Any _context_ = `this` ] )
 
-### $ $.scroll ( [ Number _x_ , ] Number _y_ ] )
+### [0.3] .str ( Any _value_ )
 
-### $ | Number $.scroll.x ( [ Number _x_ ] )
+### [0.1] .toCamel ( String _value_ )
 
-### $ | Number $.scroll.y ( [ Number _x_ ] )
+### [0.1] .toKebab ( String _value_ )
 
-### Void $.set ( Element _element_, String _alias_, Any _value_ )
+### [0.2] .typeOf ( Any _value_ )
 
-### Function $.setter ( String _alias_ [ , Function | String _setter_ ] )
-
-### String $.toCamel ( String _value_ )
-
-### String $.toKebab ( String _value_ )
-
-### String $.typeOf ( Any _value_ )
-
-### Object $.version
+### [0.1] .version
 
 ## Instance methods
 
-### .addClass ( String _classes_ )
+### [0.1] .addClass ( String _class_ )
 This one is self-explanatory: it allows you to add a classe (or a space-separated list of classes) to a collection of elements.
 ```javascript
 var links = $("a");
-links.addClass("red blinking");
+links.addClass("red");
 ```
 
-### .after ( [ Collection | Element | Maker | String _stuff_ ] )
+### [0.2] .after ( [ Array | Element | String _stuff_ ] )
 
-### .append ( )
+### [0.1] .append ( Array | Element | Function | String _stuff_ )
 
-### .appendTo ( )
-
-### .attr ( String attribute [ , Any _value_ ] )
+### [0.2] .appendTo ( Element _element_ )
 
 ### .before ( )
 
